@@ -1,6 +1,6 @@
 // Manages user itineraries
 
-import { Itinerary } from '../models/Itinerary.js';
+import { Itinerary } from '../../../Develop/Server/src/models/Itinerary.js';
 import { getWeatherByCity } from '../services/weatherService.js';
 import { searchFlights } from '../services/flightService.js';
 
