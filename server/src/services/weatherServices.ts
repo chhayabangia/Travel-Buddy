@@ -1,23 +1,81 @@
-// Fetch weather data from OpenWeatherMap API
-
-import fetch from 'node-fetch';
-import dotenv from 'dotenv';
+import fetch from "node-fetch";
+import dotenv from "dotenv";
 
 dotenv.config();
 
-export const getWeatherByCity = async (city: string) => {
+interface Coordinates {
+  lat: number;
+  lon: number;
+}
+
+interface WeatherData {
+  temperature: number;
+  description: string;
+  date?: string;
+}
+
+// Generic function to fetch data from OpenWeather API
+const fetchFromAPI = async (url: string): Promise<any> => {
+  const response = await fetch(url);
+  if (!response.ok) throw new Error(`API Error: ${response.statusText}`);
+  return response.json();
+};
+
+// Fetch coordinates (lat/lon) for a city, state, and country
+export const getCoordinates = async (location: string): Promise<Coordinates> => {
+  const apiKey = process.env.OPENWEATHER_API_KEY;
+  if (!apiKey) throw new Error("Missing OpenWeather API key");
+
+  const locationParts = location.split(",");
+  if (locationParts.length !== 3) throw new Error("Invalid location format. Use 'City,State,Country'.");
+
+  const [city, state, country] = locationParts.map((part) => part.trim());
+
+  const apiUrl = `http://api.openweathermap.org/geo/1.0/direct?q=${encodeURIComponent(city)},${encodeURIComponent(state)},${encodeURIComponent(country)}&appid=${apiKey}`;
+  const data = await fetchFromAPI(apiUrl);
+  if (data.length === 0) throw new Error("City not found.");
+
+  return { lat: data[0].lat, lon: data[0].lon };
+};
+
+// Fetch current weather using coordinates
+const getCurrentWeather = async (coordinates: Coordinates): Promise<WeatherData> => {
+  const apiKey = process.env.OPENWEATHER_API_KEY;
+  const url = `https://api.openweathermap.org/data/2.5/weather?lat=${coordinates.lat}&lon=${coordinates.lon}&appid=${apiKey}&units=metric`;
+
+  const data = await fetchFromAPI(url);
+  return {
+    temperature: data.main.temp,
+    description: data.weather[0].description,
+  };
+};
+
+//Fetch 5-day forecast
+const getForecast = async (coordinates: Coordinates): Promise<WeatherData[]> => {
+  const apiKey = process.env.OPENWEATHER_API_KEY;
+  const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${coordinates.lat}&lon=${coordinates.lon}&appid=${apiKey}&units=metric`;
+
+  const data = await fetchFromAPI(url);
+
+  return data.list
+    .filter((entry: any) => entry.dt_txt.includes("12:00:00"))
+    .map((entry: any) => ({
+      temperature: entry.main.temp,
+      description: entry.weather[0].description,
+      date: entry.dt_txt.split(" ")[0], 
+    }));
+};
+
+// Fetch full weather data for destination
+export const getWeatherByCity = async (destination: string) => {
   try {
-    const response = await fetch(
-      `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${process.env.OPENWEATHER_API_KEY}&units=metric`
-    );
-    if (!response.ok) throw new Error('Failed to fetch weather data');
-    const weatherData = await response.json();
-    return {
-      temperature: weatherData.main.temp,
-      condition: weatherData.weather[0].description,
-    };
+    const coordinates = await getCoordinates(destination);
+    const currentWeather = await getCurrentWeather(coordinates);
+    const forecast = await getForecast(coordinates);
+
+    return { coordinates, currentWeather, forecast };
   } catch (error) {
-    console.error('Error fetching weather:', error);
-    return { error: 'Could not retrieve weather data' };
+    console.error("Error fetching weather:", error);
+    return { error: "Could not retrieve weather data" };
   }
 };

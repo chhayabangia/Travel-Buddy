@@ -1,11 +1,27 @@
-import sequelize from '../config/database';
-import { UserFactory } from './user';
-import { ItineraryFactory } from './itinerary';
+import sequelize from "../config/db.js"; 
+import User from "./user.js"; 
+import Itinerary from "./itinerary.js"; 
+//import Weather from "./Weather.js"; 
 
-const User = UserFactory(sequelize);
-const Itinerary = ItineraryFactory(sequelize);
+//Define relationships between models
+User.hasMany(Itinerary, { foreignKey: "userId", onDelete: "CASCADE" });
+Itinerary.belongsTo(User, { foreignKey: "userId" });
 
-User.hasMany(Itinerary, { foreignKey: 'userId', as: 'itineraries' });
-Itinerary.belongsTo(User, { foreignKey: 'userId', as: 'user' });
+/*Itinerary.hasOne(Weather, { foreignKey: "city", onDelete: "CASCADE" });
+Weather.belongsTo(Itinerary, { foreignKey: "itineraryId" });
+export { sequelize, User, Itinerary, Weather };*/
 
-export { User, Itinerary };
+//Sync models with the database (optional, can also be done in `db.ts`)
+const syncDatabase = async () => {
+  try {
+    await sequelize.sync({ alter: true }); 
+    console.log("Database synchronized successfully.");
+  } catch (error) {
+    console.error("Database synchronization failed:", error);
+  }
+};
+
+//Execute database sync (optional)
+syncDatabase();
+
+export { sequelize, User, Itinerary };

@@ -1,21 +1,61 @@
-import { Sequelize, DataTypes, Model, Optional } from "sequelize";
-import { User } from "./user.js";
+import { DataTypes, Optional, Model } from "sequelize";
+import sequelize from "../config/db.js";
+
+interface weatherData {
+  temperature: number;
+  description: string;
+}
+
 
 interface ItineraryAttributes {
-  id: string;
-  userId: string;
+  id: number;
+  userId: number;
   origin: string;
   destination: string;
-  departureDate: Date;
-  returnDate: Date;
+  departureDate: string;
+  returnDate: string;
   flight: string;
   airline: string;
-  price: number;
-  hotel: string;
-  attractions: object;
+  price?: number;
+  hotel?: string;
+  weather?: weatherData | null;
+  attractions?: string[];
 }
 
 interface ItineraryCreationAttributes extends Optional<ItineraryAttributes, "id"> {}
+
+class Itinerary extends Model<ItineraryAttributes, ItineraryCreationAttributes> implements ItineraryAttributes {
+  public id!: number;
+  public userId!: number;
+  public origin!: string;
+  public destination!: string;
+  public departureDate!: string;
+  public returnDate!: string;
+  public flight!: string;
+  public airline!: string;
+  public price?: number;
+  public hotel?: string;
+  public weather?: weatherData | null;
+  public attractions?: string[];
+}
+
+Itinerary.init(
+  {
+    id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
+    userId: { type: DataTypes.INTEGER, allowNull: false },
+    origin: { type: DataTypes.STRING, allowNull: false },
+    destination: { type: DataTypes.STRING, allowNull: false },
+    departureDate: { type: DataTypes.STRING, allowNull: false },
+    returnDate: { type: DataTypes.STRING, allowNull: true },
+    flight: { type: DataTypes.STRING, allowNull: false },
+    airline: { type: DataTypes.STRING, allowNull: false },
+    price: { type: DataTypes.FLOAT, allowNull: true },
+    hotel: { type: DataTypes.STRING, allowNull: true },
+    attractions: { type: DataTypes.ARRAY(DataTypes.STRING), allowNull: true },
+    weather: { type: DataTypes.JSON, allowNull: true },
+  },
+  { sequelize, modelName: "itineraries" }
+);
 
 export class Itinerary extends Model<ItineraryAttributes, ItineraryCreationAttributes> implements ItineraryAttributes {
   public id!: string;

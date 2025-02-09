@@ -1,5 +1,5 @@
 import express from "express";
-import Weather from "../models/Weather";
+import Weather from "../models/Weather.js";
 
 const router = express.Router();
 
