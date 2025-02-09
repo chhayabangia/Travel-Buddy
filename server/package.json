@@ -12,7 +12,9 @@
     "seed": "node dist/seeds/index.js"
   },
   "nodemonConfig": {
-    "watch": ["src"],
+    "watch": [
+      "src"
+    ],
     "ext": "ts,json,js",
     "exec": "npx tsc && node dist/server.js"
   },
@@ -31,6 +33,7 @@
     "@types/bcrypt": "^5.0.2",
     "@types/express": "^4.17.21",
     "@types/jsonwebtoken": "^9.0.6",
+    "@types/node-fetch": "^2.6.12",
     "typescript": "^5.4.5"
   }
 }

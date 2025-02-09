@@ -1,10 +1,11 @@
 // Handles flight API requests
 import fetch from 'node-fetch';
 import dotenv from 'dotenv';
+import { Request, Response } from 'express';
 
 dotenv.config();
 
-export const searchFlights = async (req, res) => {
+export const searchFlights = async (req: Request, res: Response) => {
   const { origin, destination, departureDate } = req.query;
 
   try {
@@ -22,7 +23,7 @@ export const searchFlights = async (req, res) => {
               {
                 originPlaceId: { iata: origin },
                 destinationPlaceId: { iata: destination },
-                date: { year: 2025, month: 4, day: 1 },
+                date: { year: 2025, month: 4, day: 1 }, // departureDate?
               },
             ],
             adults: 1,
