@@ -57,42 +57,4 @@ Itinerary.init(
   { sequelize, modelName: "itineraries" }
 );
 
-export class Itinerary extends Model<ItineraryAttributes, ItineraryCreationAttributes> implements ItineraryAttributes {
-  public id!: string;
-  public userId!: string;
-  public origin!: string;
-  public destination!: string;
-  public departureDate!: Date;
-  public returnDate!: Date;
-  public flight!: string;
-  public airline!: string;
-  public price!: number;
-  public hotel!: string;
-  public attractions!: object;
-
-  public readonly user!: User;
-}
-
-export function ItineraryFactory(sequelize: Sequelize): typeof Itinerary {
-  Itinerary.init(
-    {
-      id: { type: DataTypes.UUID, defaultValue: DataTypes.UUIDV4, primaryKey: true },
-      userId: { type: DataTypes.UUID, allowNull: false },
-      origin: { type: DataTypes.STRING, allowNull: false },
-      destination: { type: DataTypes.STRING, allowNull: false },
-      departureDate: { type: DataTypes.DATE, allowNull: false },
-      returnDate: { type: DataTypes.DATE, allowNull: false },
-      flight: { type: DataTypes.STRING },
-      airline: { type: DataTypes.STRING },
-      price: { type: DataTypes.FLOAT },
-      hotel: { type: DataTypes.STRING },
-      attractions: { type: DataTypes.JSON },
-    },
-    {
-      sequelize,
-      tableName: "itineraries",
-    }
-  );
-
-  return Itinerary;
-}
+export default Itinerary;
