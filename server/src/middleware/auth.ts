@@ -5,12 +5,16 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 interface AuthRequest extends Request {
-  user?: any; // Extend request type to include user
+  user?: any;
 }
 
 export const authenticateJWT = (req: AuthRequest, res: Response, next: NextFunction): void => {
   const token = req.header('Authorization');
-  
+  /* const token = req.header("Authorization")?.replace("Bearer ", "");
+if (!token) {
+  return res.status(401).json({ error: "Access denied. No token provided." });
+}
+*/
   if (!token) {
     res.status(401).json({ error: 'Access denied. No token provided.' });
     return;

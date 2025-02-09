@@ -1,6 +1,11 @@
 import { DataTypes, Optional, Model } from "sequelize";
 import sequelize from "../config/db.js";
 
+interface weatherData {
+  temperature: number;
+  description: string;
+}
+
 
 interface ItineraryAttributes {
   id: number;
@@ -13,6 +18,7 @@ interface ItineraryAttributes {
   airline: string;
   price?: number;
   hotel?: string;
+  weather?: weatherData | null;
   attractions?: string[];
 }
 
@@ -29,6 +35,7 @@ class Itinerary extends Model<ItineraryAttributes, ItineraryCreationAttributes> 
   public airline!: string;
   public price?: number;
   public hotel?: string;
+  public weather?: weatherData | null;
   public attractions?: string[];
 }
 
@@ -42,9 +49,10 @@ Itinerary.init(
     returnDate: { type: DataTypes.STRING, allowNull: true },
     flight: { type: DataTypes.STRING, allowNull: false },
     airline: { type: DataTypes.STRING, allowNull: false },
-    price: { type: DataTypes.FLOAT, allowNull: false },
+    price: { type: DataTypes.FLOAT, allowNull: true },
     hotel: { type: DataTypes.STRING, allowNull: true },
     attractions: { type: DataTypes.ARRAY(DataTypes.STRING), allowNull: true },
+    weather: { type: DataTypes.JSON, allowNull: true },
   },
   { sequelize, modelName: "itineraries" }
 );

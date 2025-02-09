@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { searchFlights } from '../services/flightService.js';
+import { getCoordinates } from '../services/weatherServices.js';
 
 interface FlightQueryParams {
   origin: string;
@@ -15,8 +16,15 @@ export const getFlights = async (req: Request, res: Response): Promise<void> => 
       res.status(400).json({ error: 'Missing required parameters: origin, destination, or departureDate' });
       return;
     }
+    /*if (!/^\d{4}-\d{2}-\d{2}$/.test(departureDate)) {
+      res.status(400).json({ error: 'Invalid date format. Use YYYY-MM-DD.' });
+      return;
+    }*/
 
-    const flights = await searchFlights(origin, destination, departureDate);
+    const originCoords = await getCoordinates(origin);
+    const destinationCoords = await getCoordinates(destination);
+
+    const flights = await searchFlights(originCoords, destinationCoords, departureDate);
 
     if (!flights || flights.length === 0) {
       res.status(404).json({ error: 'No flights found for the selected date' });

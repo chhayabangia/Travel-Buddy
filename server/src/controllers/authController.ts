@@ -45,3 +45,10 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     res.status(500).json({ error: 'Failed to log in' });
   }
 };
+
+/* const existingUser = await User.findOne({ where: { email } });
+if (existingUser) {
+  return res.status(400).json({ error: "Email already in use" });
+}
+
+const hashedPassword = await bcrypt.hash(password, 10);*/

@@ -1,5 +1,3 @@
-// Routs for user login/setup
-
 import express from 'express';
 import { register, login } from '../controllers/authController.js';
 
