@@ -7,7 +7,6 @@ interface FlightQueryParams {
   destination: string;
   departureDate: string;
 }
-
 export const getFlights = async (req: Request, res: Response): Promise<void> => {
   try {
     const { origin, destination, departureDate } = req.query as unknown as FlightQueryParams;

@@ -33,7 +33,7 @@ export const createItinerary = async (req: AuthRequest, res: Response) => {
     const flights = await searchFlights(originCoords, destinationCoords, departureDate, returnDate);
 
     const newItinerary = await Itinerary.create({
-      userId: req.user.id,
+      userId: req.user?.id,
       origin,
       destination,
       departureDate,

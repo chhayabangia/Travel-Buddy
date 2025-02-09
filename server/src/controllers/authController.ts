@@ -19,8 +19,8 @@ export const register = async (req: Request, res: Response) => {
 export const login = async (req: Request, res: Response): Promise<void> => {
   try {
     const { email, password } = req.body;
-    const user = await User.findOne({ where: { email } }) as User | null;
 
+    const user = await User.findOne({ where: { email } }) as User | null;
 
     if (!user) {
       res.status(400).json({ error: 'Invalid credentials' });
@@ -37,6 +37,10 @@ export const login = async (req: Request, res: Response): Promise<void> => {
       throw new Error('JWT_SECRET is not defined');
     }
 
+
+    if (!process.env.JWT_SECRET) {
+      throw new Error('JWT_SECRET is not defined');
+    }
     const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
     res.json({ token });
