@@ -1,4 +1,4 @@
-import dotenv from 'dotenv';
+/*import dotenv from 'dotenv';
 dotenv.config();
 
 import { Sequelize } from 'sequelize';
@@ -41,11 +41,11 @@ async function checkConnection() {
 // Call the function to log connection details
 checkConnection();
 
-export default sequelize;
+export default sequelize;*/
 
 
 // Used to connect to a local database
-/*import { Sequelize } from "sequelize";
+import { Sequelize } from "sequelize";
 import dotenv from "dotenv";
 import pkg from "pg"; 
 
@@ -106,4 +106,4 @@ const sequelize = new Sequelize(
   }
 );
 
-export default sequelize;*/
+export default sequelize;
