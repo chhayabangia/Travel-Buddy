@@ -5,13 +5,13 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-export const getWeatherByCity = async (city) => {
+export const getWeatherByCity = async (city: any) => {
   try {
     const response = await fetch(
       `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${process.env.OPENWEATHER_API_KEY}&units=metric`
     );
     if (!response.ok) throw new Error('Failed to fetch weather data');
-    const weatherData = await response.json();
+    const weatherData = await response.json() as { main: { temp: number }, weather: { description: string }[] };
     return {
       temperature: weatherData.main.temp,
       condition: weatherData.weather[0].description,

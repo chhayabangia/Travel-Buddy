@@ -1,40 +1,31 @@
-// Handles flight API requests
-import fetch from 'node-fetch';
-import dotenv from 'dotenv';
+import { Request, Response } from 'express';
+import { searchFlights } from '../services/flightService.js';
 
-dotenv.config();
+interface FlightQueryParams {
+  origin: string;
+  destination: string;
+  departureDate: string;
+}
 
-export const searchFlights = async (req, res) => {
-  const { origin, destination, departureDate } = req.query;
-
+export const getFlights = async (req: Request, res: Response): Promise<void> => {
   try {
-    const response = await fetch(
-      `https://partners.api.skyscanner.net/apiservices/v3/flights/live/search?apikey=${process.env.SKYSCANNER_API_KEY}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          query: {
-            market: 'US',
-            locale: 'en-US',
-            currency: 'USD',
-            queryLegs: [
-              {
-                originPlaceId: { iata: origin },
-                destinationPlaceId: { iata: destination },
-                date: { year: 2025, month: 4, day: 1 },
-              },
-            ],
-            adults: 1,
-          },
-        }),
-      }
-    );
+    const { origin, destination, departureDate } = req.query as unknown as FlightQueryParams;
 
-    const flightData = await response.json();
-    res.json(flightData);
+    if (!origin || !destination || !departureDate) {
+      res.status(400).json({ error: 'Missing required parameters: origin, destination, or departureDate' });
+      return;
+    }
+
+    const flights = await searchFlights(origin, destination, departureDate);
+
+    if (!flights || flights.length === 0) {
+      res.status(404).json({ error: 'No flights found for the selected date' });
+      return;
+    }
+
+    res.status(200).json(flights);
   } catch (error) {
     console.error('Error fetching flights:', error);
-    res.status(500).json({ error: 'Failed to retrieve flight options' });
+    res.status(500).json({ error: 'Failed to retrieve flights' });
   }
 };
