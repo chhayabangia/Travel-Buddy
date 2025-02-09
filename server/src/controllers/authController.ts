@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
-import User from '../models/user.js';
+import { User }from '../models/user.js';
 
 dotenv.config();
 export const register = async (req: Request, res: Response) => {
