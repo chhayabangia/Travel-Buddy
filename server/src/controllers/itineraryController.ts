@@ -1,10 +1,12 @@
 // Manages user itineraries
-
-import { Itinerary } from '../models/Itinerary.js';
-import { getWeatherByCity } from '../services/weatherService.js';
+import { Itinerary } from '../models/itinerary.js';
+import { User } from '../models/user.js';
+import { getWeatherByCity } from '../services/weatherServices.js';
 import { searchFlights } from '../services/flightService.js';
+import { Request, Response } from 'express';
+import '../types/express';
 
-export const saveItinerary = async (req, res) => {
+export const saveItinerary = async (req: Request, res: Response) => {
   try {
     const { origin, destination, departureDate, returnDate, hotel, attractions, flightNumber, airline, price } = req.body;
     
@@ -13,7 +15,7 @@ export const saveItinerary = async (req, res) => {
     }
     
     const newItinerary = await Itinerary.create({
-      userId: req.user.id,
+      userId: req.user?.id,
       origin,
       destination,
       departureDate,
