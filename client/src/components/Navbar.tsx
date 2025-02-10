@@ -1,6 +1,6 @@
 // Navigation component for the application
 import { Link } from "react-router-dom";
-import "./../css/global.css"; // Adjust path if necessary
+import "./../css/global.css";
 
 function Navbar() {
   return (

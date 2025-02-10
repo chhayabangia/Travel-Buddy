@@ -5,6 +5,21 @@
   background-color: #121212;
 }
 
+/* 🔹 Header Styling */
+.header {
+  background-color: #1e1e1e;
+  color: white;
+  text-align: center;
+  padding: 20px;
+  font-size: 2em;
+  font-weight: bold;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+}
+
 body {
   margin: 0;
   display: flex;

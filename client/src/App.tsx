@@ -1,16 +1,15 @@
 // Main app entry point
 import { useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Navbar from "./components/Navbar"; // Import Navbar
-import FlightSearch from "./components/FlightSearch";
-import HotelSearch from "./components/HotelSearch";
+import Navbar from "./components/Navbar";
+import FlightSearch from "./components/FlightSearch.tsx";
+import HotelSearch from "./components/HotelSearch.tsx";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
-import "./css/App.css";
 import "./css/global.css";
 
 function App() {
-    const [activeTab, setActiveTab] = useState("flights"); // Default tab: Flights
+    const [activeTab, setActiveTab] = useState("flights"); // Default tab: Flights for now
   
     return (
       <Router>

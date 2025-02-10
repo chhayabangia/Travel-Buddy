@@ -1,6 +1,5 @@
 import { useState } from "react";
 import "../css/HotelSearch.css";
-import "../css/global.css";
 
 // Predefined city mappings
 const cityMappings: { [key: string]: string } = {
@@ -19,14 +18,14 @@ const cityMappings: { [key: string]: string } = {
 const cityOptions = Object.values(cityMappings);
 
 const HotelSearch = () => {
-  const [hotels, setHotels] = useState<any[]>([]); // ✅ Restored hotel state
+  const [hotels, setHotels] = useState<any[]>([]);
   const [city, setCity] = useState("");
   const [filteredCities, setFilteredCities] = useState<string[]>([]);
   const [checkIn, setCheckIn] = useState("");
   const [checkOut, setCheckOut] = useState("");
   const [guests, setGuests] = useState(1);
-  const [loading, setLoading] = useState(false); // ✅ Restored loading state
-  const [error, setError] = useState(""); // ✅ Restored error state
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(""); 
 
   // Handle city input with auto-correction & auto-suggestions
   const handleCityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -74,7 +73,7 @@ const HotelSearch = () => {
         }
       
         const data = await response.json();
-        console.log("✅ API Response Data:", JSON.stringify(data, null, 2)); // ✅ Log Full Response
+        console.log("✅ API Response Data:", JSON.stringify(data, null, 2)); 
       
   
       if (!data || data.length === 0) {
@@ -149,7 +148,7 @@ const HotelSearch = () => {
         {hotels.length > 0 ? (
             hotels.map((hotel, index) => (
             <li key={index} className="hotel-item">
-                <h3>{hotel.name || "No Name Available"}</h3> {/* ✅ Prevents 'Invalid' */}
+                <h3>{hotel.name || "No Name Available"}</h3> 
                 <p>{hotel.address?.countryCode || "No Address Available"}</p>
                 <p>
                 Coordinates: {hotel.geoCode?.latitude ?? "N/A"}, {hotel.geoCode?.longitude ?? "N/A"}

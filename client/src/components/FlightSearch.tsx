@@ -1,7 +1,6 @@
 import { useState } from "react";
 
 import "../css/FlightSearch.css";
-import "../css/global.css";
 
 
 const FlightSearch = () => {

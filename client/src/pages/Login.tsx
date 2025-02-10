@@ -1,4 +1,6 @@
 // User Login page
+import "./../css/global.css";
+
 function Login() {
     return (
       <div>

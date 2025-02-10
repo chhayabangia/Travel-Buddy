@@ -1,4 +1,6 @@
 //Landing page (will this be one of the existing pages or a new one?)
+import "./../css/global.css";
+
 function Home() {
     return (
       <div>
