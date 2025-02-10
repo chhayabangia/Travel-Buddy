@@ -6,6 +6,7 @@ import itineraryRoutes from './routes/itinerary.js';
 import flightRoutes from './routes/flights.js';
 import authRoutes from './routes/auth.js';
 import hotelRoutes from './routes/hotels.js';
+import cityRoutes from "./routes/cities.js";
 //import { sequelize } from './models/index.js';
 dotenv.config();
 
@@ -36,6 +37,7 @@ app.use('/api', itineraryRoutes);
 app.use('/api', flightRoutes);
 app.use('/api', authRoutes);
 app.use('/api/hotels', hotelRoutes);
+app.use("/api/cities", cityRoutes);
 
 // Start Server & Sync Database
 const PORT = process.env.PORT || 5000;

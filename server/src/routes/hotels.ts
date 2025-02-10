@@ -14,9 +14,31 @@ router.get('/search', async ({ query }: Request, res: Response): Promise<void> =
       return;
     }
 
+    // Map city names to IATA city codes for Amadeus API
+    const cityToIATACode: { [key: string]: string } = {
+      "NEW YORK": "NYC",
+      "LOS ANGELES": "LAX",
+      "CHICAGO": "CHI",
+      "MIAMI": "MIA",
+      "HOUSTON": "HOU",
+      "SAN FRANCISCO": "SFO",
+      "LAS VEGAS": "LAS",
+      "ORLANDO": "ORL",
+      "BOSTON": "BOS",
+      "SEATTLE": "SEA"
+    };
+
+    const cityCodeStr = Array.isArray(cityCode) ? cityCode[0] : cityCode; // Ensure it's a string
+    const formattedCityCode = cityToIATACode[(cityCodeStr as string).trim().toUpperCase()] || (cityCodeStr as string).trim().toUpperCase();
+    console.log("🔄 Converted city name to IATA Code:", formattedCityCode);   
+
+    console.log("🔎 Received cityCode:", cityCode);
+    console.log("🔄 Formatted cityCode:", formattedCityCode);
+    
     const response = await amadeus.referenceData.locations.hotels.byCity.get({
-      cityCode: (cityCode as string).trim(),
+      cityCode: formattedCityCode,
     });
+    
 
     res.json(response.data);
   } catch (error) {
