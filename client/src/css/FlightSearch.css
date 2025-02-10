@@ -34,13 +34,16 @@
   
   /* 🔹 Flight Results */
   .flight-list {
-    max-height: 350px;
+    max-height: 400px;
     overflow-y: auto;
     padding: 10px;
+    background: #222; 
+    border-radius: 5px;
   }
   
   .flight-list li {
     background: #222;
+    color: white;
     padding: 12px;
     margin-top: 8px;
     border-radius: 5px;

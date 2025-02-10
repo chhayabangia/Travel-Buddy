@@ -3,9 +3,10 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import sequelize from './config/db.js';
 import itineraryRoutes from './routes/itinerary.js';
-import flightRoutes from './routes/flights.js';
+// import flightRoutes from './routes/flights.js';
 import authRoutes from './routes/auth.js';
-import hotelRoutes from './routes/hotels.js';
+import flightRoutes from "./routes/flights-amadeus.js";
+import hotelRoutes from './routes/hotels-amadeus.js';
 import cityRoutes from "./routes/cities.js";
 //import { sequelize } from './models/index.js';
 dotenv.config();
@@ -34,10 +35,11 @@ app.listen(PORT, () => {
 
 // Routes
 app.use('/api', itineraryRoutes);
-app.use('/api', flightRoutes);
+// app.use('/api', flightRoutes);
 app.use('/api', authRoutes);
 app.use('/api/hotels', hotelRoutes);
 app.use("/api/cities", cityRoutes);
+app.use("/api/flights", flightRoutes);
 
 // Start Server & Sync Database
 const PORT = process.env.PORT || 5000;

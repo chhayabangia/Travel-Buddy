@@ -38,7 +38,8 @@ router.get('/search', async ({ query }: Request, res: Response): Promise<void> =
     const response = await amadeus.referenceData.locations.hotels.byCity.get({
       cityCode: formattedCityCode,
     });
-    
+
+    console.log("🏨 Hotel Search Response:", JSON.stringify(response.data, null, 2));
 
     res.json(response.data);
   } catch (error) {

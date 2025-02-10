@@ -17,6 +17,14 @@ GET https://sky-scanner3.p.rapidapi.com/flights/search-incomplete?sessionId=ClsI
 GET https://sky-scanner3.p.rapidapi.com/flights/cheapest-one-way?fromEntityId=DFWA&toEntityId=JFK&departDate=2025-02-28
 */
 
+/* Alex - I tried figuring out the API already made and ran into multiple issues so I went back to the
+amadeus API and having better luck. Maybe it's because I already learned a lot from their website who
+knows. But what I do know now after doing research in comparisons of other APIs to amadeus, amadeus
+provides faster calling and has no limits compared to Skyscanner and the IATA codes are directly supported
+by amadeus plus we wont need to have an extra function/step to fetch IDs (skyId). I am going to integrate
+more of the amadeus in a separate file so that incase y'all decide to go back or have any updates to this
+file it is readily available. */
+
 import fetch from "node-fetch";
 import dotenv from "dotenv";
 
@@ -42,6 +50,12 @@ export const searchFlights = async (
   returnDate?: string
 ): Promise<Flight[]> => {
   try {
+    console.log("🛫 Searching flights...");
+    console.log("🛫 Origin Coordinates:", originCoords);
+    console.log("🛬 Destination Coordinates:", destinationCoords);
+    console.log("📅 Departure Date:", departureDate);
+    console.log("🔑 Using API Key:", process.env.RAPIDAPI_KEY ? "✅ Loaded" : "❌ NOT Loaded");
+
     const response = await fetch("https://flights-scraper-api.p.rapidapi.com/flights", {
       method: "POST",
       headers: {
@@ -58,10 +72,14 @@ export const searchFlights = async (
         currency: "USD",
       }),
     });
+    
+    console.log("🔄 API Response Status:", response.status);
 
     if (!response.ok) throw new Error(`Failed to fetch flights: ${response.statusText}`);
 
     const data = (await response.json()) as unknown as FlightResponse;
+    console.log("✅ API Response Data:", data);
+
     return data.flights.slice(0, 5).map((flight: any) => ({
       flightNumber: flight.flightNumber,
       airline: flight.airline,

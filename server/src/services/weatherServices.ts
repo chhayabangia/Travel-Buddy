@@ -23,16 +23,26 @@ const fetchFromAPI = async (url: string): Promise<any> => {
 
 // Fetch coordinates (lat/lon) for a city, state, and country
 export const getCoordinates = async (location: string): Promise<Coordinates> => {
+  console.log("🔍 Fetching coordinates for:", location);
+
   const apiKey = process.env.OPENWEATHER_API_KEY;
   if (!apiKey) throw new Error("Missing OpenWeather API key");
 
   const locationParts = location.split(",");
-  if (locationParts.length !== 3) throw new Error("Invalid location format. Use 'City,State,Country'.");
+  if (locationParts.length !== 3) {
+    console.error("❌ Invalid location format:", location);
+    throw new Error("Invalid location format. Use 'City,State,Country'.");
+  }
 
   const [city, state, country] = locationParts.map((part) => part.trim());
+  console.log("📌 Parsed Location → City:", city, "| State:", state, "| Country:", country);
 
   const apiUrl = `http://api.openweathermap.org/geo/1.0/direct?q=${encodeURIComponent(city)},${encodeURIComponent(state)},${encodeURIComponent(country)}&appid=${apiKey}`;
+  console.log("🌍 API URL:", apiUrl);
+  
   const data = await fetchFromAPI(apiUrl);
+  console.log("📍 API Response Data:", data);
+  
   if (data.length === 0) throw new Error("City not found.");
 
   return { lat: data[0].lat, lon: data[0].lon };
