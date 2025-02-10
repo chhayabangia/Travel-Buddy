@@ -20,6 +20,10 @@ GET https://sky-scanner3.p.rapidapi.com/flights/cheapest-one-way?fromEntityId=DF
 import fetch from "node-fetch";
 import dotenv from "dotenv";
 
+interface FlightResponse {
+  flights: any[];
+}
+
 dotenv.config();
 
 interface Flight {
@@ -57,7 +61,7 @@ export const searchFlights = async (
 
     if (!response.ok) throw new Error(`Failed to fetch flights: ${response.statusText}`);
 
-    const data: { flights: any[] } = await response.json();
+    const data = (await response.json()) as unknown as FlightResponse;
     return data.flights.slice(0, 5).map((flight: any) => ({
       flightNumber: flight.flightNumber,
       airline: flight.airline,
