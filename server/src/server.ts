@@ -5,8 +5,10 @@ import sequelize from './config/db.js';
 import itineraryRoutes from './routes/itinerary.js';
 import flightRoutes from './routes/flights.js';
 import authRoutes from './routes/auth.js';
-//import { sequelize } from './models/index.js';
+//import { sequelize } from './models/index.ts';
 dotenv.config();
+
+const PORT = process.env.PORT || 5000;
 
 const app = express();
 
@@ -19,30 +21,26 @@ app.use(
   })
 );
 app.use(express.urlencoded({ extended: true }));
-/*
 sequelize
   .authenticate()
   .then(() => console.log("Database connected successfully."))
   .catch((err) => console.error("Database connection error:", err));
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-});*/
-
 // Routes
-app.use('/api', itineraryRoutes);
-app.use('/api', flightRoutes);
-app.use('/api', authRoutes);
-
+const baseRouter = express.Router();
+baseRouter.use('/itinerary', itineraryRoutes);
+baseRouter.use('/flights', flightRoutes);
+baseRouter.use('/auth', authRoutes);
+app.use('/api', baseRouter);
 // Start Server & Sync Database
-const PORT = process.env.PORT || 5000;
-
 const startServer = async () => {
   try {
-    await sequelize.sync(); 
-
-    console.log(' Database models synchronized.');
+    if (process.env.NODE_ENV !== 'production') {
+      await sequelize.sync(); 
+      console.log('Database models synchronized.');
+    } else {
+      console.log('Production environment detected. Use migrations for database synchronization.');
+    }
 
     app.listen(PORT, () => {
       console.log(`Server running on http://localhost:${PORT}`);
@@ -50,24 +48,8 @@ const startServer = async () => {
   } catch (error) {
     console.error('Server failed to start:', error);
     process.exit(1);
-  }
+}
 };
-
-/* const startServer = async () => {
-  try {
-    if (process.env.DB_CONNECT !== "false") { 
-      await sequelize.authenticate(); // Ensure DB is connected
-      console.log("Database connected successfully.");
-    }
-
-    app.listen(PORT, () => {
-      console.log(`Server running on http://localhost:${PORT}`);
-    });
-  } catch (error) {
-    console.error("Server failed to start:", error);
-    process.exit(1);
-  }
-};*/
 
 
 startServer();

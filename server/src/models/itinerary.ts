@@ -57,8 +57,9 @@ Itinerary.init(
     attractions: { type: DataTypes.ARRAY(DataTypes.STRING), allowNull: true },
     weather: { type: DataTypes.JSON, allowNull: true },
   },
-  { sequelize, 
+  {
     tableName: "itineraries",
+    sequelize,
    }
 );
 

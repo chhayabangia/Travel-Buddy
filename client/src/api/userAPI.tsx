@@ -1,15 +1,8 @@
 import Auth from "../utils/auth";
-const DB_URL = process.env.REACT_APP_DB_URL || "http://localhost:5000";
 
-interface User {
-  id: string;
-  username: string;
-  email: string;
-}
-
-const retrieveUsers = async (): Promise<User[]> => {
+const retrieveUsers = async () => {
   try {
-    const response = await fetch(`${DB_URL}/api/users`, {
+    const response = await fetch(`/api/users`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${Auth.getToken()}`,

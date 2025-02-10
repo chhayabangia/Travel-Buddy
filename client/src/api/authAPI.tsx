@@ -1,10 +1,8 @@
 import type { UserLogin } from "../interfaces/UserLogin";
 
-const DB_URL = process.env.REACT_APP_DB_URL || "http://localhost:5000";
-
 const login = async (userInfo: UserLogin): Promise<any> => {
   try {
-    const response = await fetch(`${DB_URL}/auth/login`, {
+    const response = await fetch(`/auth/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
