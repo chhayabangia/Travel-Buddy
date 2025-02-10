@@ -1,37 +1,34 @@
-import { DataTypes, Optional, Model } from "sequelize";
-import sequelize from "../config/db.js";
+import { Sequelize, DataTypes, Optional, Model } from "sequelize";
 
 interface WeatherAttributes {
   itineraryId: number;
   city: string;
   temperature: number;
-  condition: string;
-  humidity?: number;
-  windSpeed?: number;
+  description: string;
 }
 
 interface WeatherCreationAttributes extends Optional<WeatherAttributes, "itineraryId"> {}
 
-class Weather extends Model<WeatherAttributes, WeatherCreationAttributes> implements WeatherAttributes {
+export class Weather extends Model<WeatherAttributes, WeatherCreationAttributes> implements WeatherAttributes {
   public itineraryId!: number;
   public id!: number;
   public city!: string;
   public temperature!: number;
-  public condition!: string;
-  public humidity?: number;
-  public windSpeed?: number;
+  public description!: string;
 }
-
+export function WeatherFactory(sequelize: Sequelize): typeof Weather {
 Weather.init(
   {
     itineraryId: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
     city: { type: DataTypes.STRING, allowNull: false },
     temperature: { type: DataTypes.FLOAT, allowNull: false },
-    condition: { type: DataTypes.STRING, allowNull: false },
-    humidity: { type: DataTypes.FLOAT, allowNull: true },
-    windSpeed: { type: DataTypes.FLOAT, allowNull: true },
+    description: { type: DataTypes.STRING, allowNull: false },
   },
-  { sequelize, tableName: "weather" }
+  { 
+    tableName: "weather",
+    sequelize,
+   }
 );
 
-export default Weather;
+return Weather;
+}
