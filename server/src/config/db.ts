@@ -5,7 +5,7 @@ dotenv.config();
 import { Sequelize } from 'sequelize';
 
 // ✅ Ensure DATABASE_URL is properly used for Render, otherwise use local
-const isUsingRenderDB = Boolean(process.env.DATABASE_URL && !process.env.DB_HOST);
+const isUsingRenderDB = Boolean(process.env.DATABASE_URL);
 
 const sequelize = isUsingRenderDB
   ? new Sequelize(process.env.DATABASE_URL as string, {
