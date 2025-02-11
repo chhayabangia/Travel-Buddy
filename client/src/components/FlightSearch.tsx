@@ -26,9 +26,12 @@ const FlightSearch = () => {
       /* const response = await fetch(
         `http://localhost:5000/api/flights/search?origin=${origin}&destination=${destination}&date=${departureDate}`
       );*/
-      const response = await fetch(
+      /* const response = await fetch(
         `${import.meta.env.VITE_API_URL}/api/flights/search?origin=${origin}&destination=${destination}&date=${departureDate}`
-      );
+      ); */
+      const response = await fetch(
+        `https://travel-buddy-api-24xq.onrender.com/api/flights/search?origin=${origin}&destination=${destination}&date=${departureDate}`
+      );      
       
       const data = await response.json();
 
@@ -79,8 +82,11 @@ const FlightSearch = () => {
           flights.map((flight, index) => (
             <li key={index} className="flight-item">
               <h3>{flight.airline} - Flight {flight.flightNumber}</h3>
-              <p>Departure: {flight.departureTime} | Arrival: {flight.arrivalTime}</p>
-              <p className="flight-price">💰 ${flight.price}</p>
+              <p>
+                <strong>Departure:</strong> {new Date(flight.departureTime).toLocaleString()} |
+                <strong> Arrival:</strong> {new Date(flight.arrivalTime).toLocaleString()}
+              </p>
+              <p className="flight-price">💰 {Number(flight.price).toLocaleString("en-US", { style: "currency", currency: "USD" })}</p>
               <button className="select-flight-btn" onClick={() => handleFlightSelection(flight)}>
                 Select Flight
               </button>
