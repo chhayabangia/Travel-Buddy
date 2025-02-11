@@ -64,6 +64,7 @@ const FlightSearch: React.FC = () => {
   const sortedFlights = [...flights].sort((a, b) => {
     if (sortBy === "price") return a.price - b.price;
     if (sortBy === "departure") return new Date(a.departureTime).getTime() - new Date(b.departureTime).getTime();
+    if (sortBy === "arrival") return new Date(a.arrivalTime).getTime() - new Date(b.arrivalTime).getTime(); 
     if (sortBy === "airline") return a.airline.localeCompare(b.airline);
     return 0;
   });
@@ -121,11 +122,17 @@ const FlightSearch: React.FC = () => {
       {error && <p className="error-message">{error}</p>}
 
       <label htmlFor="sortFlights">Sort by:</label>
-      <select id="sortFlights" onChange={(e) => setSortBy(e.target.value)}>
+      <select
+        id="sortFlights"
+        onChange={(e) => {
+          setSortBy(e.target.value);
+          console.log("🔄 User changed sort filter:", e.target.value);
+        }}
+      >
         <option value="price">Price (Lowest First)</option>
         <option value="airline">Airline (A-Z)</option>
         <option value="departure">Departure Time (Earliest First)</option>
-        <option value="arrivalTime">Arrival Time</option>
+        <option value="arrival">Arrival Time (Earliest First)</option>
       </select>
 
       <ul>
