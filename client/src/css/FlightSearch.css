@@ -1,55 +1,91 @@
-/* ✈️ Styles for FlightSearch.tsx */
-.flight-search {
+/* ✈️ Align Flight Search Styling with Hotel Search */
+.flight-search-container {
   background: #1e1e1e;
   padding: 20px;
   border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
   text-align: center;
+  box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
+  max-width: 1200px;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-/* 🔹 Center Input Fields */
-.flight-search input {
+/* 🔍 Search Bar Similar to HotelSearch */
+.flight-search {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  padding: 15px;
+  background: #2a2a2a;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 1100px;
+}
+
+/* ✍ Input Fields */
+.flight-search input,
+.flight-search select {
   padding: 14px;
   font-size: 16px;
   border: 1px solid #444;
   background-color: #222;
-  color: #fff;
+  color: white;
   border-radius: 5px;
-  width: 100%;
-  max-width: 500px;
+  width: 250px;
+  text-align: center;
 }
 
-/* 🔹 Search Button */
+/* 🔍 Button Styling */
 .flight-search button {
-  padding: 12px 24px;
+  padding: 14px 24px;
   font-size: 16px;
-  margin-top: 10px;
-  transition: background 0.3s ease-in-out, transform 0.2s;
+  cursor: pointer;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  transition: background 0.3s ease-in-out;
 }
 
 .flight-search button:hover {
   background: #0056b3;
-  transform: scale(1.05);
 }
 
-/* 🔹 Flight Results */
+/* ✈️ Flight List (Matches Hotel List) */
 .flight-list {
-  max-height: 400px;
+  max-height: 500px;
   overflow-y: auto;
   padding: 10px;
-  background: #222; 
-  border-radius: 5px;
+  background: #2a2a2a;
+  border-radius: 8px;
+  color: white;
+  list-style: none;
+  width: 100%;
 }
 
-.flight-list li {
-  background: #222;
-  color: white;
-  padding: 12px;
-  margin-top: 8px;
+.flight-item {
+  background: #333;
+  padding: 15px;
+  margin: 10px 0;
   border-radius: 5px;
   transition: transform 0.2s ease-in-out;
 }
 
-.flight-list li:hover {
-  transform: scale(1.03);
+.flight-item:hover {
+  transform: scale(1.02);
+}
+
+/* 📱 Responsive Adjustments */
+@media (max-width: 768px) {
+  .flight-search {
+    flex-direction: column;
+    align-items: center;
+  }
+  .flight-search input,
+  .flight-search select {
+    width: 100%;
+  }
 }
