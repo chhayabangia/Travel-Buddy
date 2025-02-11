@@ -59,6 +59,10 @@ const startServer = async () => {
 
     app.listen(PORT, () => {
       console.log(`✅ Server running on port ${PORT}`);
+      
+      if (!process.env.PORT) {
+        console.warn("⚠️ Warning: No PORT assigned by Render, using fallback 5000!");
+      }
     });
 
   } catch (error) {
