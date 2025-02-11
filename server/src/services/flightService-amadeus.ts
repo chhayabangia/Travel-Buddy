@@ -44,7 +44,8 @@ const getAccessToken = async (): Promise<string | null> => {
 };
 
 // 🔹 Get Nearest Airport for a City
-const getNearestAirport = async (city: string) => {
+export const getNearestAirport = async (city: string): Promise<string | null> => {
+
   if (!accessToken) await getAccessToken();
 
   try {
