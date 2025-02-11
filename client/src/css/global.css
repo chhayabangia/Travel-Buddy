@@ -1,42 +1,12 @@
-:root {
-  --text-primary: #272727;
-  --text-secondary: #6b6b6b;
-  --page-background: #fff;
-  --button-bg: #007bff;
-  --button-text: #fff;
-}
-
 /* 🔹 Navbar Styling */
 .navbar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  background: var(--page-background);
-  color: var(--text-primary);
-  padding: 15px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  z-index: 1000;
-  border-bottom: 2px solid #ccc; 
-}
-
-/* Button Styling */
-.toggle-button {
-  background-color: #1e88e5;
+  padding: 15px;
+  background: #007bff;
   color: white;
-  border: none;
-  padding: 10px 15px;
-  font-size: 14px;
-  cursor: pointer;
-  border-radius: 5px;
 }
-
-.toggle-button:hover {
-  background-color: #1565c0;
-}
-
 
 .nav-links {
   display: flex;
@@ -61,22 +31,26 @@ body {
   color: #f0f0f0;
 }
 
+/* Dark Mode (Default) */
+body {
+  background-color: #121212;
+  color: #f0f0f0;
+}
+
+/* Light Mode */
 body.light-mode {
-  background-color: #ffffff;
-  color: #111 !important; /* Fix text color */
-}
-
-h1, h2, h3, p, label {
-  color: var(--text-primary); /* Ensure proper contrast */
-}
-
-.light-mode h1 {
-  color: #111; /* Override for readability */
+  background-color: #ffffffe0;
+  color: #333;
 }
 
 h1 {
   color: inherit; /* Ensures it inherits the body color */
   transition: color 0.3s ease-in-out;
+}
+
+/* Light Mode Title Fix */
+body.light-mode h1 {
+  color: #111; /* Sets the title color in light mode */
 }
 
 /* 🖌️ Global Button Styles */
