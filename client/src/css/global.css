@@ -6,24 +6,6 @@
   --button-text: #fff;
 }
 
-/* 🔹 Dark Mode Variables */
-.dark-mode {
-  --text-primary: #f0f0f0;
-  --text-secondary: #c7c7c7;
-  --page-background: #121212;
-  --button-bg: #444;
-  --button-text: #fff;
-}
-
-/* 🔹 Light Mode Variables */
-.light-mode {
-  --text-primary: #272727;
-  --text-secondary: #6b6b6b;
-  --page-background: #fff;
-  --button-bg: #007bff;
-  --button-text: #fff;
-}
-
 /* 🔹 Navbar Styling */
 .navbar {
   position: fixed;

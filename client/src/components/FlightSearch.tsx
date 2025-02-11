@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../css/FlightSearch.css";
 
 const airportMappings: Record<string, string> = {
@@ -16,18 +16,19 @@ interface Flight {
   arrivalTime: string;
 }
 
-interface FlightSearchProps {
-  isDarkMode: boolean;
-}
-
-const FlightSearch: React.FC<FlightSearchProps> = ({ isDarkMode }) => {
+const FlightSearch: React.FC = () => {
   const [departure, setDeparture] = useState("");
   const [destination, setDestination] = useState("");
   const [date, setDate] = useState("");
   const [flights, setFlights] = useState<Flight[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isDarkMode, setIsDarkMode] = useState(false);
   const [sortBy, setSortBy] = useState("price");
+
+  useEffect(() => {
+    document.body.className = isDarkMode ? "dark-mode" : "light-mode";
+  }, [isDarkMode]);
 
   const handleSearch = async () => {
     setLoading(true);
@@ -79,50 +80,72 @@ const FlightSearch: React.FC<FlightSearchProps> = ({ isDarkMode }) => {
   });
 
   return (
-    <div className={`flight-search-container ${isDarkMode ? "dark-mode" : "light-mode"}`}>
-      <h2>Search Flights</h2>
-      <div className="search-form">
-        <label htmlFor="departure">Departure</label>
-        <input
-          id="departure"
-          type="text"
-          placeholder="Enter departure city"
-          value={departure}
-          onChange={(e) => setDeparture(e.target.value)}
-        />
+    <div className={`flight-search-container ${isDarkMode ? "dark" : "light"}`}>
+      {/* Dark Mode Toggle */}
+      <div className="theme-toggle-container">
+        <button className="theme-toggle" onClick={() => setIsDarkMode(!isDarkMode)}>
+          {isDarkMode ? "☀️ Light Mode" : "🌙 Dark Mode"}
+        </button>
+      </div>
 
-        <label htmlFor="destination">Destination</label>
-        <input
-          id="destination"
-          type="text"
-          placeholder="Enter destination"
-          value={destination}
-          onChange={(e) => setDestination(e.target.value)}
-        />
+      {/* Search Bar */}
+      <div className="search-bar">
+        <div className="input-group">
+          <label htmlFor="departure">Departure</label>
+          <input
+            id="departure"
+            type="text"
+            placeholder="Enter departure city"
+            value={departure}
+            onChange={(e) => setDeparture(e.target.value)}
+          />
+        </div>
 
-        <label htmlFor="date">Date</label>
-        <input
-          id="date"
-          type="date"
-          value={date}
-          onChange={(e) => setDate(e.target.value)}
-        />
+        <div className="input-group">
+          <label htmlFor="destination">Destination</label>
+          <input
+            id="destination"
+            type="text"
+            placeholder="Enter destination"
+            value={destination}
+            onChange={(e) => setDestination(e.target.value)}
+          />
+        </div>
+
+        <div className="input-group">
+          <label htmlFor="date">Date</label>
+          <input
+            id="date"
+            type="date"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+          />
+        </div>
 
         <button className="search-btn" onClick={handleSearch} disabled={loading}>
           {loading ? "Searching..." : "Search Flights"}
         </button>
       </div>
 
+      {/* Error Message */}
       {error && <p className="error-message">{error}</p>}
 
+      {/* Sort Options */}
       <label htmlFor="sortFlights">Sort by:</label>
-      <select id="sortFlights" onChange={(e) => setSortBy(e.target.value)}>
+      <select
+        id="sortFlights"
+        onChange={(e) => {
+          setSortBy(e.target.value);
+          console.log("🔄 User changed sort filter:", e.target.value);
+        }}
+      >
         <option value="price">Price (Lowest First)</option>
         <option value="airline">Airline (A-Z)</option>
         <option value="departure">Departure Time (Earliest First)</option>
         <option value="arrival">Arrival Time (Earliest First)</option>
       </select>
 
+      {/* Flight Results */}
       <ul className="flight-results">
         {sortedFlights.map((flight, index) => (
           <li key={index}>

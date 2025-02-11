@@ -15,13 +15,9 @@ const cityMappings: { [key: string]: string } = {
   "seattle": "SEA",
 };
 
-interface HotelSearchProps {
-  isDarkMode: boolean;
-}
-
 const cityOptions = Object.keys(cityMappings);
 
-const HotelSearch: React.FC<HotelSearchProps> = ({ isDarkMode }) => {
+const HotelSearch = () => {
   const [hotels, setHotels] = useState<any[]>([]);
   const [city, setCity] = useState("");
   const [filteredCities, setFilteredCities] = useState<string[]>([]);
@@ -109,7 +105,7 @@ const HotelSearch: React.FC<HotelSearchProps> = ({ isDarkMode }) => {
   };
 
   return (
-    <div className={`hotel-search-container ${isDarkMode ? "dark-mode" : "light-mode"}`}>
+    <div className="hotel-search">
       <h2>🏨 Find Your Stay</h2>
       <div className="search-bar">
         <div className="autocomplete">
