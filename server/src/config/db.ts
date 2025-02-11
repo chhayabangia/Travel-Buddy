@@ -4,31 +4,46 @@ dotenv.config();
 
 import { Sequelize } from 'sequelize';
 
-const DATABASE_URL = process.env.DATABASE_URL;
+// ✅ Ensure DATABASE_URL is properly used for Render, otherwise use local
+const isUsingRenderDB = Boolean(process.env.DATABASE_URL && !process.env.DB_HOST);
 
-if (!DATABASE_URL) {
-  throw new Error("❌ DATABASE_URL is not defined in environment variables.");
-}
+const sequelize = isUsingRenderDB
+  ? new Sequelize(process.env.DATABASE_URL as string, {
+      dialect: 'postgres',
+      logging: false,
+    })
+  : new Sequelize(
+      process.env.DB_NAME as string,
+      process.env.DB_USER as string,
+      process.env.DB_PASSWORD as string,
+      {
+        host: process.env.DB_HOST || 'localhost',
+        port: Number(process.env.DB_PORT) || 5432,
+        dialect: 'postgres',
+        logging: false,
+      }
+    );
 
-const sequelize = new Sequelize(DATABASE_URL, {
-  dialect: 'postgres',
-  logging: false, // Disable logging for cleaner output
-});
-
-// Function to check and log the connection
+// ✅ Check if database connection works
 async function checkConnection() {
   try {
     await sequelize.authenticate();
-    console.log('✅ Connected to Render PostgreSQL database successfully.');
+    console.log(
+      isUsingRenderDB
+        ? '✅ Connected to Render PostgreSQL database successfully.'
+        : `✅ Connected to local PostgreSQL database: ${process.env.DB_NAME} at ${process.env.DB_HOST}`
+    );
   } catch (error) {
     console.error('❌ Unable to connect to the database:', error);
+    process.exit(1);
   }
 }
 
-// Call the function to test connection
+// ✅ Verify database connection
 checkConnection();
 
 export default sequelize;
+
 
 /* import dotenv from 'dotenv';
 dotenv.config();
