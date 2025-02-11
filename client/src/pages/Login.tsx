@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 // User Login page
 import "./../css/global.css";
 
@@ -13,6 +14,8 @@ function Login() {
   
   export default Login;
 =======
+=======
+>>>>>>> main
 import { useState, FormEvent, ChangeEvent } from "react";
 
 import Auth from '../utils/auth';
@@ -51,5 +54,9 @@ const Login = () => {
   );
 };
 
+<<<<<<< HEAD
+export default Login;
+>>>>>>> main
+=======
 export default Login;
 >>>>>>> main
