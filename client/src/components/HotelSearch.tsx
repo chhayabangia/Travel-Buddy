@@ -162,17 +162,20 @@ const HotelSearch = () => {
         <p className="no-results">No results found. Try another search.</p>
       )}
 
-      <ul className="hotel-list">
-        {hotels.map((hotel, index) => (
-          <li key={index} className="hotel-item">
-            <h3>{hotel.name || "No Name Available"}</h3>
-            <p>{hotel.address?.countryCode || "No Address Available"}</p>
-            <p>
-              Coordinates: {hotel.geoCode?.latitude ?? "N/A"}, {hotel.geoCode?.longitude ?? "N/A"}
-            </p>
-          </li>
-        ))}
-      </ul>
+      {hotels.length > 0 ? (
+        <ul className="hotel-list">
+          {hotels.map((hotel, index) => (
+            <li key={index} className="hotel-item">
+              <h3>{hotel.name || "No Name Available"}</h3>
+              <p><strong>Location:</strong> {hotel.address?.countryCode || "Unknown"}</p>
+              <p><strong>Price:</strong> {hotel.price ? `$${hotel.price}` : "Not Available"}</p>
+              <p><strong>Last Update:</strong> {new Date(hotel.lastUpdate).toLocaleString()}</p>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p>No hotels found for this search.</p>
+      )}
     </div>
   );
 };
