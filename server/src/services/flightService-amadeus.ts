@@ -127,7 +127,7 @@ export const searchFlights = async (origin: string, destination: string, departu
     return data.data.map((flight: any) => {
       const segments = flight.itineraries?.[0]?.segments?.[0] || {};
       return {
-        flightNumber: segments.marketingCarrier || "N/A",
+        flightNumber: segments.number || "N/A",
         airline: segments.carrierCode || "Unknown Airline",
         price: flight.price?.total || "0",
         departureTime: segments.departure?.at || "N/A",
