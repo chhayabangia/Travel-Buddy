@@ -1,7 +1,8 @@
+// User Login Page 
 import { useState, FormEvent, ChangeEvent } from "react";
-
 import Auth from '../utils/auth';
 import { login } from "../api/authAPI";
+import "./../css/global.css";
 
 const Login = () => {
   const [loginData, setLoginData] = useState({
@@ -28,10 +29,43 @@ const Login = () => {
   };
 
   return (
-    <form onSubmit={handleFormSubmit}>
-      <input type="text" name="username" value={loginData.username} onChange={handleInputChange} />
-      <input type="password" name="password" value={loginData.password} onChange={handleInputChange} />
-      <button type="submit">Login</button>
+    <form onSubmit={handleFormSubmit} className="login-form">
+      {/* Username Field */}
+      <div className="form-group">
+        <label htmlFor="username">Username:</label>
+        <input
+          type="text"
+          id="username"
+          name="username"
+          value={loginData.username}
+          onChange={handleInputChange}
+          placeholder="Enter your username"
+          title="Please enter your username"
+          aria-label="Username"
+          required
+        />
+      </div>
+
+      {/* Password Field */}
+      <div className="form-group">
+        <label htmlFor="password">Password:</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          value={loginData.password}
+          onChange={handleInputChange}
+          placeholder="Enter your password"
+          title="Please enter your password"
+          aria-label="Password"
+          required
+        />
+      </div>
+
+      {/* Login Button */}
+      <button type="submit" title="Click to log in">
+        🔐 Login
+      </button>
     </form>
   );
 };
