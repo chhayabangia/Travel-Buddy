@@ -10,7 +10,7 @@
     "server:dev": "cd server && npm run start",
     "start:dev": "concurrently \"npm run server:dev\" \"wait-on tcp:5000 && npm run client:dev\"",
     "install-and-build": "npm i && npm run build",
-    "render-build": "npm install && npm run build && npm run client:build"
+    "render-build": "npm install && npm run build"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
