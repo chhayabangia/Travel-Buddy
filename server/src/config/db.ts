@@ -1,4 +1,36 @@
+// Changing the db.ts to see if it fixes the db issue i was having with render, old code is below.
 import dotenv from 'dotenv';
+dotenv.config();
+
+import { Sequelize } from 'sequelize';
+
+const DATABASE_URL = process.env.DATABASE_URL;
+
+if (!DATABASE_URL) {
+  throw new Error("❌ DATABASE_URL is not defined in environment variables.");
+}
+
+const sequelize = new Sequelize(DATABASE_URL, {
+  dialect: 'postgres',
+  logging: false, // Disable logging for cleaner output
+});
+
+// Function to check and log the connection
+async function checkConnection() {
+  try {
+    await sequelize.authenticate();
+    console.log('✅ Connected to Render PostgreSQL database successfully.');
+  } catch (error) {
+    console.error('❌ Unable to connect to the database:', error);
+  }
+}
+
+// Call the function to test connection
+checkConnection();
+
+export default sequelize;
+
+/* import dotenv from 'dotenv';
 dotenv.config();
 
 import { Sequelize } from 'sequelize';
@@ -41,7 +73,7 @@ async function checkConnection() {
 // Call the function to log connection details
 checkConnection();
 
-export default sequelize;
+export default sequelize; */
 
 
 /*// Used to connect to a local database
