@@ -23,9 +23,13 @@ const FlightSearch = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch(
+      /* const response = await fetch(
         `http://localhost:5000/api/flights/search?origin=${origin}&destination=${destination}&date=${departureDate}`
+      );*/
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/flights/search?origin=${origin}&destination=${destination}&date=${departureDate}`
       );
+      
       const data = await response.json();
 
       console.log("🛫 API Flight Data:", data);

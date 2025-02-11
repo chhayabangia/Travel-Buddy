@@ -17,12 +17,21 @@ router.get('/search', async (req: Request, res: Response): Promise<void> => {
     }
 
     const flights = await searchFlights(origin as string, destination as string, date as string);
-
     console.log("🟡 API Response from Amadeus:", flights);
+    
+    if (!flights || flights.length === 0) {
+      console.warn("⚠️ No flights found for this search.");
+      res.status(404).json({ error: "No flights available for the selected route and date." });
+      return; 
+    }
+
+    // ✅ Send the response without returning anything
     res.json(flights);
+
   } catch (error) {
     console.error('❌ Error fetching flights:', error);
     res.status(500).json({ error: 'Failed to fetch flight data' });
+    return; 
   }
 });
 
