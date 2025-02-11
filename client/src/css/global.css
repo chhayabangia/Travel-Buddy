@@ -1,12 +1,54 @@
+:root {
+  --text-primary: #272727;
+  --text-secondary: #6b6b6b;
+  --page-background: #fff;
+  --button-bg: #007bff;
+  --button-text: #fff;
+}
+
+/* 🔹 Dark Mode Variables */
+.dark-mode {
+  --text-primary: #f0f0f0;
+  --text-secondary: #c7c7c7;
+  --page-background: #121212;
+  --button-bg: #444;
+  --button-text: #fff;
+}
+
+/* 🔹 Light Mode Variables */
+.light-mode {
+  --text-primary: #272727;
+  --text-secondary: #6b6b6b;
+  --page-background: #fff;
+  --button-bg: #007bff;
+  --button-text: #fff;
+}
+
 /* 🔹 Navbar Styling */
 .navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 15px;
-  background: #007bff;
+  background: var(--primary-color);
   color: white;
 }
+
+/* Button Styling */
+.toggle-button {
+  background-color: #1e88e5;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.toggle-button:hover {
+  background-color: #1565c0;
+}
+
 
 .nav-links {
   display: flex;
@@ -35,12 +77,6 @@ body {
 body {
   background-color: #121212;
   color: #f0f0f0;
-}
-
-/* Light Mode */
-body.light-mode {
-  background-color: #ffffffe0;
-  color: #333;
 }
 
 h1 {
