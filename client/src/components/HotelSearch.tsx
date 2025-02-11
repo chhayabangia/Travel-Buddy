@@ -62,14 +62,20 @@ const HotelSearch = () => {
     // Ensure city name is mapped correctly to a city code
     let lowerCaseCity = city.trim().toLowerCase();
     let cityCode = cityMappings[lowerCaseCity] || "";
-
+    
+    if (!cityCode && city.trim().length > 2) {
+      // If no mapping is found but input is long enough, use uppercase city name as fallback
+      cityCode = city.trim().toUpperCase();
+    }
+    
     if (!cityCode) {
-      console.log("❌ No city code found! Showing error message...");
+      console.warn(`❌ No city code found for "${city}". Showing error message...`);
       setError("Please select a valid city from the dropdown.");
       setLoading(false);
       return;
     }
-
+    
+    console.log(`✅ Final City Code for API Request: ${cityCode}`);    
     console.log(`🚀 Sending Hotel API Request: https://travel-buddy-api-24xq.onrender.com/api/hotels/search?cityCode=${cityCode}`);
 
     try {
