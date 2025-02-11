@@ -26,12 +26,18 @@
 
 /* 🔹 Navbar Styling */
 .navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: var(--page-background);
+  color: var(--text-primary);
+  padding: 15px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px;
-  background: var(--primary-color);
-  color: white;
+  z-index: 1000;
+  border-bottom: 2px solid #ccc; 
 }
 
 /* Button Styling */
@@ -73,20 +79,22 @@ body {
   color: #f0f0f0;
 }
 
-/* Dark Mode (Default) */
-body {
-  background-color: #121212;
-  color: #f0f0f0;
+body.light-mode {
+  background-color: #ffffff;
+  color: #111 !important; /* Fix text color */
+}
+
+h1, h2, h3, p, label {
+  color: var(--text-primary); /* Ensure proper contrast */
+}
+
+.light-mode h1 {
+  color: #111; /* Override for readability */
 }
 
 h1 {
   color: inherit; /* Ensures it inherits the body color */
   transition: color 0.3s ease-in-out;
-}
-
-/* Light Mode Title Fix */
-body.light-mode h1 {
-  color: #111; /* Sets the title color in light mode */
 }
 
 /* 🖌️ Global Button Styles */

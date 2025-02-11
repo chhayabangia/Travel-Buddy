@@ -4,17 +4,6 @@
   background-color: #121212;
 }
 
-/* Dynamic Light/Dark Mode */
-.light-mode {
-  background-color: #ffffff;
-  color: #000000;
-}
-
-.dark-mode {
-  background-color: #121212;
-  color: #ffffff;
-}
-
 /* 🔹 Header Styling */
 .header {
   background-color: #1e1e1e;
@@ -27,7 +16,7 @@
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 1000;
+  z-index: 1050; 
 }
 
 body {
