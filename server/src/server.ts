@@ -32,7 +32,7 @@ app.use("/api/cities", cityRoutes);
 app.use("/api/flights", flightRoutes);
 
 // ✅ Ensure Render assigns a port dynamically
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 5000;
 
 // ✅ Start Server & Sync Database
 const startServer = async () => {
