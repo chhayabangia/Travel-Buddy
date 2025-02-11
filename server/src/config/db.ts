@@ -1,4 +1,4 @@
-// Changing the db.ts to see if it fixes the db issue i was having with render, old code is below.
+// Changing the db.ts to see if it fixes the db issue i was having with render, old code is below
 import dotenv from 'dotenv';
 dotenv.config();
 

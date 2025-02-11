@@ -1,4 +1,4 @@
-// Reworking some code here too just like db.ts, old code is below
+// Reworking some code here too just like db.ts, old code is below 
 import sequelize from "../config/db.js"; 
 import { UserFactory } from "./user.js"; 
 import { Itinerary } from "./itinerary.js"; 
