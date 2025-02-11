@@ -53,16 +53,20 @@ const startServer = async () => {
     await sequelize.sync(); 
     console.log('✅ Database models synchronized.');
 
+    // 🟡 Log the assigned PORT before the server starts
+    console.log(`🟡 Render assigned PORT: ${process.env.PORT}`);
+    console.log(`🟡 Using PORT: ${PORT}`);
+
+    if (!process.env.PORT) {
+      console.warn("⚠️ Warning: No PORT assigned by Render, using fallback 5000!");
+    }
+
     app.get("/", (req, res) => {
       res.send("✅ Travel Buddy API is running!");
     });
 
     app.listen(PORT, () => {
       console.log(`✅ Server running on port ${PORT}`);
-      
-      if (!process.env.PORT) {
-        console.warn("⚠️ Warning: No PORT assigned by Render, using fallback 5000!");
-      }
     });
 
   } catch (error) {
@@ -70,6 +74,7 @@ const startServer = async () => {
     process.exit(1);
   }
 };
+
 
 /* const startServer = async () => {
   try {
