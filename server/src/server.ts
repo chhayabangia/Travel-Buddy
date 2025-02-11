@@ -14,13 +14,13 @@ dotenv.config();
 const app = express();
 
 // Middleware
+// ✅ Allow frontend to access backend from Render (CORS Fix)
+app.use(cors({
+  origin: process.env.FRONTEND_URL || '*', 
+  credentials: true,
+}));
+
 app.use(express.json());
-app.use(
-  cors({
-    origin: 'http://localhost:3000', // Allow frontend to access backend
-    credentials: true,
-  })
-);
 app.use(express.urlencoded({ extended: true }));
 /*
 sequelize
@@ -33,6 +33,9 @@ app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });*/
 
+// ✅ Ensure Render assigns a port dynamically
+const PORT = process.env.PORT || 5000;
+
 // Routes
 app.use('/api', itineraryRoutes);
 // app.use('/api', flightRoutes);
@@ -41,20 +44,25 @@ app.use('/api/hotels', hotelRoutes);
 app.use("/api/cities", cityRoutes);
 app.use("/api/flights", flightRoutes);
 
-// Start Server & Sync Database
-const PORT = process.env.PORT || 5000;
-
+// ✅ Start Server & Sync Database
 const startServer = async () => {
   try {
-    await sequelize.sync(); 
+    await sequelize.authenticate(); // Ensure DB is connected
+    console.log('✅ Database connected successfully.');
 
-    console.log(' Database models synchronized.');
+    await sequelize.sync(); 
+    console.log('✅ Database models synchronized.');
+
+    app.get("/", (req, res) => {
+      res.send("✅ Travel Buddy API is running!");
+    });
 
     app.listen(PORT, () => {
-      console.log(`Server running on http://localhost:${PORT}`);
+      console.log(`✅ Server running on port ${PORT}`);
     });
+
   } catch (error) {
-    console.error('Server failed to start:', error);
+    console.error('❌ Server failed to start:', error);
     process.exit(1);
   }
 };
