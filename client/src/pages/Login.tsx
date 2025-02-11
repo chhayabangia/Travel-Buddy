@@ -1,25 +1,9 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-// User Login page
-import "./../css/global.css";
-
-function Login() {
-    return (
-      <div>
-        <h1>🔑 Login Page</h1>
-        <p>Please enter your credentials.</p>
-      </div>
-    );
-  }
-  
-  export default Login;
-=======
-=======
->>>>>>> main
+// User Login page 
 import { useState, FormEvent, ChangeEvent } from "react";
 
 import Auth from '../utils/auth';
 import { login } from "../api/authAPI";
+import "./../css/global.css";
 
 const Login = () => {
   const [loginData, setLoginData] = useState({
@@ -54,9 +38,4 @@ const Login = () => {
   );
 };
 
-<<<<<<< HEAD
 export default Login;
->>>>>>> main
-=======
-export default Login;
->>>>>>> main
