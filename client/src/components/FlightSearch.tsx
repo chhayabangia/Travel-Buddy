@@ -1,116 +1,144 @@
-// AmadeusAPI version of flight search
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../css/FlightSearch.css";
 
+const airportMappings: Record<string, string> = {
+  "New York": "NYC",
+  "Orlando": "MCO",
+  "Los Angeles": "LAX",
+  "Chicago": "ORD",
+};
+
 interface Flight {
-  flightNumber: string;
   airline: string;
+  flightNumber: string;
   price: number;
   departureTime: string;
   arrivalTime: string;
 }
 
-const FlightSearch = () => {
-  const [flights, setFlights] = useState<Flight[]>([]);
-  const [origin, setOrigin] = useState("");
+const FlightSearch: React.FC = () => {
+  const [departure, setDeparture] = useState("");
   const [destination, setDestination] = useState("");
-  const [departureDate, setDepartureDate] = useState("");
+  const [date, setDate] = useState("");
+  const [flights, setFlights] = useState<Flight[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [selectedFlight, setSelectedFlight] = useState<Flight | null>(null);
+  const [sortBy, setSortBy] = useState("price");
+  const [airportSuggestions, setAirportSuggestions] = useState<string[]>([]);
 
-  const fetchFlights = async () => {
+  const handleSearch = async () => {
     setLoading(true);
     setError(null);
+
+    console.log("🔎 User Input:", destination);
+    const mappedDestination = airportMappings[destination] || destination;
+
+    if (!mappedDestination) {
+      console.error("❌ No mapped airport code found!");
+      setError("Invalid city name. Please select a valid destination.");
+      setLoading(false);
+      return;
+    }
+
+    console.log("✅ Final Mapped Airport Code:", mappedDestination);
+    const apiUrl = `https://travel-buddy-api-24xq.onrender.com/api/flights/search?departure=${departure}&destination=${mappedDestination}&date=${date}`;
+    console.log("🚀 Sending Flight API Request:", apiUrl);
+
     try {
-      /* const response = await fetch(
-        `http://localhost:5000/api/flights/search?origin=${origin}&destination=${destination}&date=${departureDate}`
-      );*/
-      /* const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/flights/search?origin=${origin}&destination=${destination}&date=${departureDate}`
-      ); */
-      const response = await fetch(
-        `https://travel-buddy-api-24xq.onrender.com/api/flights/search?origin=${origin}&destination=${destination}&date=${departureDate}`
-      );      
-      
-      const data = await response.json();
-
-      console.log("🛫 API Flight Data:", data);
-
-      if (response.ok) {
-        setFlights(data);
-      } else {
-        setError(data.error || "No flights found");
+      const response = await fetch(apiUrl);
+      if (!response.ok) {
+        throw new Error(`API Error: ${response.statusText}`);
       }
+      const data: Flight[] = await response.json();
+      console.log("✅ Flight API Response:", data.length, "results");
+      setFlights(data);
     } catch (err) {
-      setError("Error fetching flights");
+      console.error("❌ Error fetching flights:", err);
+      setError("Failed to fetch flight data. Please try again.");
     } finally {
       setLoading(false);
     }
   };
 
-  const handleFlightSelection = (flight: Flight) => {
-    console.log("✈️ Selected Flight:", flight);
-    setSelectedFlight(flight);
-  };
+  // Sorting flights based on user selection
+  const sortedFlights = [...flights].sort((a, b) => {
+    if (sortBy === "price") return a.price - b.price;
+    if (sortBy === "departure") return new Date(a.departureTime).getTime() - new Date(b.departureTime).getTime();
+    if (sortBy === "airline") return a.airline.localeCompare(b.airline);
+    return 0;
+  });
+
+  // Autocomplete airport suggestions
+  useEffect(() => {
+    const suggestions = Object.keys(airportMappings).filter((airport) =>
+      airport.toLowerCase().includes(departure.toLowerCase())
+    );
+    setAirportSuggestions(suggestions);
+  }, [departure]);
 
   return (
-    <div className="flight-search">
-      <h2>✈️ Find Your Flight</h2>
-
+    <div className="flight-search-container">
+      <h2>Search Flights</h2>
       <label>
-        Origin:
-        <input type="text" placeholder="Origin" value={origin} onChange={(e) => setOrigin(e.target.value)} />
+        Departure City:
+        <input
+          type="text"
+          placeholder="Enter departure city"
+          value={departure}
+          onChange={(e) => setDeparture(e.target.value)}
+        />
+        {airportSuggestions.length > 0 && (
+          <ul className="suggestions">
+            {airportSuggestions.map((suggestion, index) => (
+              <li key={index} onClick={() => setDeparture(suggestion)}>
+                {suggestion}
+              </li>
+            ))}
+          </ul>
+        )}
       </label>
-
       <label>
         Destination:
-        <input type="text" placeholder="Destination" value={destination} onChange={(e) => setDestination(e.target.value)} />
+        <input
+          type="text"
+          placeholder="Enter destination"
+          value={destination}
+          onChange={(e) => setDestination(e.target.value)}
+        />
       </label>
-
       <label>
-        Departure Date:
-        <input type="date" value={departureDate} onChange={(e) => setDepartureDate(e.target.value)} />
+        Date:
+        <input
+          type="date"
+          value={date}
+          onChange={(e) => setDate(e.target.value)}
+        />
       </label>
-
-      <button onClick={fetchFlights} disabled={loading}>{loading ? "Searching..." : "🔍 Search Flights"}</button>
+      <button onClick={handleSearch} disabled={loading}>
+        {loading ? "Searching..." : "Search"}
+      </button>
 
       {error && <p className="error-message">{error}</p>}
 
-      <ul className="flight-list">
-        {flights?.length > 0 ? (
-          flights.map((flight, index) => (
-            <li key={index} className="flight-item">
-              <h3>{flight.airline} - Flight {flight.flightNumber}</h3>
-              <p>
-                <strong>Departure:</strong> {new Date(flight.departureTime).toLocaleString()} |
-                <strong> Arrival:</strong> {new Date(flight.arrivalTime).toLocaleString()}
-              </p>
-              <p className="flight-price">💰 {Number(flight.price).toLocaleString("en-US", { style: "currency", currency: "USD" })}</p>
-              <button className="select-flight-btn" onClick={() => handleFlightSelection(flight)}>
-                Select Flight
-              </button>
-            </li>
-          ))
-        ) : (
-          !loading && (
-            <li>
-              <p className="no-results">No flights found. Try another search.</p>
-            </li>
-          )
-        )}
-      </ul>
+      <label htmlFor="sortFlights">Sort by:</label>
+      <select id="sortFlights" onChange={(e) => setSortBy(e.target.value)}>
+        <option value="price">Price (Lowest First)</option>
+        <option value="airline">Airline (A-Z)</option>
+        <option value="departure">Departure Time (Earliest First)</option>
+        <option value="arrivalTime">Arrival Time</option>
+      </select>
 
-      {selectedFlight && (
-        <div className="selected-flight">
-          <h4>✅ Selected Flight:</h4>
-          <p><strong>Airline:</strong> {selectedFlight.airline}</p>
-          <p><strong>Flight Number:</strong> {selectedFlight.flightNumber}</p>
-          <p><strong>Price:</strong> ${selectedFlight.price}</p>
-          <p><strong>Departure:</strong> {selectedFlight.departureTime}</p>
-          <p><strong>Arrival:</strong> {selectedFlight.arrivalTime}</p>
-        </div>
-      )}
+      <ul>
+        {sortedFlights.map((flight, index) => (
+          <li key={index}>
+            <strong>{flight.airline} {flight.flightNumber}</strong>
+            {index === 0 && <span className="cheapest">🔥 Cheapest</span>}
+            <p>Price: ${flight.price}</p>
+            <p>Departure: {new Date(flight.departureTime).toLocaleString()}</p>
+            <p>Arrival: {new Date(flight.arrivalTime).toLocaleString()}</p>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };
