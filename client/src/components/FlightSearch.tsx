@@ -23,12 +23,8 @@ const FlightSearch: React.FC = () => {
   const [flights, setFlights] = useState<Flight[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [isDarkMode, setIsDarkMode] = useState(false);
   const [sortBy, setSortBy] = useState("price");
-
-  useEffect(() => {
-    document.body.className = isDarkMode ? "dark-mode" : "light-mode";
-  }, [isDarkMode]);
+  const [airportSuggestions, setAirportSuggestions] = useState<string[]>([]);
 
   const handleSearch = async () => {
     setLoading(true);
@@ -45,7 +41,7 @@ const FlightSearch: React.FC = () => {
     }
 
     console.log("✅ Final Mapped Airport Code:", mappedDestination);
-    const apiUrl = `https://travel-buddy-api-24xq.onrender.com/api/flights/search?departure=${departure}&destination=${mappedDestination}&date=${date}&sortBy=${sortBy}`;
+    const apiUrl = `https://travel-buddy-api-24xq.onrender.com/api/flights/search?origin=${departure}&destination=${mappedDestination}&date=${date}&sortBy=${sortBy}`;
     console.log("🚀 Sending Flight API Request:", apiUrl);
 
     try {
@@ -64,73 +60,67 @@ const FlightSearch: React.FC = () => {
     }
   };
 
+  // Sorting flights based on user selection
   const sortedFlights = [...flights].sort((a, b) => {
-    switch (sortBy) {
-      case "price":
-        return a.price - b.price;
-      case "airline":
-        return a.airline.localeCompare(b.airline);
-      case "departure":
-        return new Date(a.departureTime).getTime() - new Date(b.departureTime).getTime();
-      case "arrival":
-        return new Date(a.arrivalTime).getTime() - new Date(b.arrivalTime).getTime();
-      default:
-        return 0;
-    }
+    if (sortBy === "price") return a.price - b.price;
+    if (sortBy === "departure") return new Date(a.departureTime).getTime() - new Date(b.departureTime).getTime();
+    if (sortBy === "arrival") return new Date(a.arrivalTime).getTime() - new Date(b.arrivalTime).getTime(); 
+    if (sortBy === "airline") return a.airline.localeCompare(b.airline);
+    return 0;
   });
 
+  // Autocomplete airport suggestions
+  useEffect(() => {
+    const suggestions = Object.keys(airportMappings).filter((airport) =>
+      airport.toLowerCase().includes(departure.toLowerCase())
+    );
+    setAirportSuggestions(suggestions);
+  }, [departure]);
+
   return (
-    <div className={`flight-search-container ${isDarkMode ? "dark" : "light"}`}>
-      {/* Dark Mode Toggle */}
-      <div className="theme-toggle-container">
-        <button className="theme-toggle" onClick={() => setIsDarkMode(!isDarkMode)}>
-          {isDarkMode ? "☀️ Light Mode" : "🌙 Dark Mode"}
-        </button>
-      </div>
+    <div className="flight-search-container">
+      <h2>Search Flights</h2>
+      <label>
+        Departure City:
+        <input
+          type="text"
+          placeholder="Enter departure city"
+          value={departure}
+          onChange={(e) => setDeparture(e.target.value)}
+        />
+        {airportSuggestions.length > 0 && (
+          <ul className="suggestions">
+            {airportSuggestions.map((suggestion, index) => (
+              <li key={index} onClick={() => setDeparture(suggestion)}>
+                {suggestion}
+              </li>
+            ))}
+          </ul>
+        )}
+      </label>
+      <label>
+        Destination:
+        <input
+          type="text"
+          placeholder="Enter destination"
+          value={destination}
+          onChange={(e) => setDestination(e.target.value)}
+        />
+      </label>
+      <label>
+        Date:
+        <input
+          type="date"
+          value={date}
+          onChange={(e) => setDate(e.target.value)}
+        />
+      </label>
+      <button onClick={handleSearch} disabled={loading}>
+        {loading ? "Searching..." : "Search"}
+      </button>
 
-      {/* Search Bar */}
-      <div className="search-bar">
-        <div className="input-group">
-          <label htmlFor="departure">Departure</label>
-          <input
-            id="departure"
-            type="text"
-            placeholder="Enter departure city"
-            value={departure}
-            onChange={(e) => setDeparture(e.target.value)}
-          />
-        </div>
-
-        <div className="input-group">
-          <label htmlFor="destination">Destination</label>
-          <input
-            id="destination"
-            type="text"
-            placeholder="Enter destination"
-            value={destination}
-            onChange={(e) => setDestination(e.target.value)}
-          />
-        </div>
-
-        <div className="input-group">
-          <label htmlFor="date">Date</label>
-          <input
-            id="date"
-            type="date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-          />
-        </div>
-
-        <button className="search-btn" onClick={handleSearch} disabled={loading}>
-          {loading ? "Searching..." : "Search Flights"}
-        </button>
-      </div>
-
-      {/* Error Message */}
       {error && <p className="error-message">{error}</p>}
 
-      {/* Sort Options */}
       <label htmlFor="sortFlights">Sort by:</label>
       <select
         id="sortFlights"
@@ -145,8 +135,7 @@ const FlightSearch: React.FC = () => {
         <option value="arrival">Arrival Time (Earliest First)</option>
       </select>
 
-      {/* Flight Results */}
-      <ul className="flight-results">
+      <ul>
         {sortedFlights.map((flight, index) => (
           <li key={index}>
             <strong>{flight.airline} {flight.flightNumber}</strong>
