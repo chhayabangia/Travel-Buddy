@@ -41,7 +41,7 @@ const FlightSearch: React.FC = () => {
     }
 
     console.log("✅ Final Mapped Airport Code:", mappedDestination);
-    const apiUrl = `https://travel-buddy-api-24xq.onrender.com/api/flights/search?departure=${departure}&destination=${mappedDestination}&date=${date}&sortBy=${sortBy}`;
+    const apiUrl = `https://travel-buddy-api-24xq.onrender.com/api/flights/search?origin=${departure}&destination=${mappedDestination}&date=${date}&sortBy=${sortBy}`;
     console.log("🚀 Sending Flight API Request:", apiUrl);
 
     try {
