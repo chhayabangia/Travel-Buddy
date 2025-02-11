@@ -94,6 +94,17 @@ export const searchFlights = async (origin: string, destination: string, departu
 
     console.log(`✈️ Using Airport Codes: ${originCode} → ${destinationCode}`);
 
+    // Ensure departure date is always in the future (based on UTC time)
+    const today = new Date();
+    const todayStr = today.toISOString().split("T")[0]; // Get today's date in YYYY-MM-DD format
+
+    if (departureDate <= todayStr) {
+      console.warn(`⚠️ Adjusting departure date: ${departureDate} is in the past. Using ${todayStr} instead.`);
+      departureDate = todayStr;
+    }
+
+    console.log(`🟡 Adjusted Departure Date: ${departureDate}`);
+
     const response = await fetch(
       `https://test.api.amadeus.com/v2/shopping/flight-offers?originLocationCode=${originCode}&destinationLocationCode=${destinationCode}&departureDate=${departureDate}&adults=1&nonStop=true&max=5`,
       {
