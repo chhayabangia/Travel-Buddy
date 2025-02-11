@@ -106,17 +106,23 @@ export const searchFlights = async (origin: string, destination: string, departu
     );
 
     const data = (await response.json()) as FlightSearchResponse;
-    if (!data.data || data.data.length === 0) throw new Error("No flights found");
-    
-    console.log("🎯 Flight Results Received:", JSON.stringify(data, null, 2));
+    console.log("🟡 Raw Amadeus API Response:", JSON.stringify(data, null, 2));
 
-    return data.data.map((flight: any) => ({
-      flightNumber: flight.itineraries[0]?.segments[0]?.marketingCarrier || "N/A",
-      airline: flight.itineraries[0]?.segments[0]?.carrierCode || "Unknown Airline",
-      price: flight.price?.total || "0",
-      departureTime: flight.itineraries[0]?.segments[0]?.departure?.at || "N/A",
-      arrivalTime: flight.itineraries[0]?.segments[0]?.arrival?.at || "N/A",
-    }));
+    if (!data.data || data.data.length === 0) {
+      console.warn("⚠️ No flights found.");
+      return [];
+    }
+
+    return data.data.map((flight: any) => {
+      const segments = flight.itineraries?.[0]?.segments?.[0] || {};
+      return {
+        flightNumber: segments.marketingCarrier || "N/A",
+        airline: segments.carrierCode || "Unknown Airline",
+        price: flight.price?.total || "0",
+        departureTime: segments.departure?.at || "N/A",
+        arrivalTime: segments.arrival?.at || "N/A",
+      };
+    });
   } catch (error) {
     console.error("❌ Error fetching flights from Amadeus:", error);
     return [];
