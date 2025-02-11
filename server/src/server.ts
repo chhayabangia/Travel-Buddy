@@ -33,9 +33,6 @@ app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });*/
 
-// ✅ Ensure Render assigns a port dynamically
-const PORT = process.env.PORT || 5000;
-
 // Routes
 app.use('/api', itineraryRoutes);
 // app.use('/api', flightRoutes);
@@ -43,6 +40,9 @@ app.use('/api', authRoutes);
 app.use('/api/hotels', hotelRoutes);
 app.use("/api/cities", cityRoutes);
 app.use("/api/flights", flightRoutes);
+
+// ✅ Ensure Render assigns a port dynamically
+const PORT = process.env.PORT || 5000;
 
 // ✅ Start Server & Sync Database
 const startServer = async () => {
