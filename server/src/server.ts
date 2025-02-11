@@ -24,9 +24,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Routes
-app.use('/api', itineraryRoutes);
+app.use('/api/itinerary', itineraryRoutes);
 // app.use('/api', flightRoutes);
-app.use('/api', authRoutes);
+app.use('/api/auth', authRoutes);
 app.use('/api/hotels', hotelRoutes);
 app.use("/api/cities", cityRoutes);
 app.use("/api/flights", flightRoutes);
