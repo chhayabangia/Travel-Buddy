@@ -1,15 +1,22 @@
 // Changing the db.ts to see if it fixes the db issue i was having with render, old code is below
+import { Sequelize } from 'sequelize';
 import dotenv from 'dotenv';
+
 dotenv.config();
 
-import { Sequelize } from 'sequelize';
-
-// ✅ Ensure DATABASE_URL is properly used for Render, otherwise use local
+// ✅ Detect if running on Render (DATABASE_URL exists)
 const isUsingRenderDB = Boolean(process.env.DATABASE_URL);
 
+// ✅ Configure SSL only for Render
 const sequelize = isUsingRenderDB
   ? new Sequelize(process.env.DATABASE_URL as string, {
       dialect: 'postgres',
+      dialectOptions: {
+        ssl: {
+          require: true, 
+          rejectUnauthorized: false, 
+        },
+      },
       logging: false,
     })
   : new Sequelize(
@@ -24,13 +31,13 @@ const sequelize = isUsingRenderDB
       }
     );
 
-// ✅ Check if database connection works
+// ✅ Verify database connection
 async function checkConnection() {
   try {
     await sequelize.authenticate();
     console.log(
       isUsingRenderDB
-        ? '✅ Connected to Render PostgreSQL database successfully.'
+        ? '✅ Connected to Render PostgreSQL with SSL.'
         : `✅ Connected to local PostgreSQL database: ${process.env.DB_NAME} at ${process.env.DB_HOST}`
     );
   } catch (error) {
@@ -39,10 +46,11 @@ async function checkConnection() {
   }
 }
 
-// ✅ Verify database connection
+// ✅ Run connection check on startup
 checkConnection();
 
 export default sequelize;
+
 
 
 /* import dotenv from 'dotenv';
