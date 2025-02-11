@@ -9,7 +9,11 @@ interface FlightSearchResponse {
     itineraries: { segments: { marketingCarrier: string; carrierCode: string; departure: { at: string }; arrival: { at: string } }[] }[];
     price: { total: string };
   }[];
+  dictionaries?: {
+    carriers?: Record<string, string>; // Map of airline codes to full names
+  };
 }
+
 
 const AMADEUS_API_KEY = process.env.AMADEUS_API_KEY || "";
 const AMADEUS_API_SECRET = process.env.AMADEUS_API_SECRET || "";
@@ -94,9 +98,9 @@ export const searchFlights = async (origin: string, destination: string, departu
 
     console.log(`✈️ Using Airport Codes: ${originCode} → ${destinationCode}`);
 
-    // Ensure departure date is always in the future (based on UTC time)
+    // Ensure departure date is in the future
     const today = new Date();
-    const todayStr = today.toISOString().split("T")[0]; // Get today's date in YYYY-MM-DD format
+    const todayStr = today.toISOString().split("T")[0]; 
 
     if (departureDate <= todayStr) {
       console.warn(`⚠️ Adjusting departure date: ${departureDate} is in the past. Using ${todayStr} instead.`);
@@ -124,11 +128,16 @@ export const searchFlights = async (origin: string, destination: string, departu
       return [];
     }
 
+    const airlineNames = data.dictionaries?.carriers ?? {};  // 🔹 Get full airline names
+
     return data.data.map((flight: any) => {
       const segments = flight.itineraries?.[0]?.segments?.[0] || {};
+      const carrierCode = segments.carrierCode || "Unknown";
+      const airlineName = airlineNames[carrierCode] || carrierCode; // 🔹 Convert code to full name
+
       return {
         flightNumber: segments.number || "N/A",
-        airline: segments.carrierCode || "Unknown Airline",
+        airline: airlineName,  // 🔹 Full airline name instead of just the code
         price: flight.price?.total || "0",
         departureTime: segments.departure?.at || "N/A",
         arrivalTime: segments.arrival?.at || "N/A",
