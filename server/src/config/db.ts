@@ -44,8 +44,8 @@ checkConnection();
 export default sequelize;
 
 
-// Used to connect to a local database
-/*import { Sequelize } from "sequelize";
+/*// Used to connect to a local database
+import { Sequelize } from "sequelize";
 import dotenv from "dotenv";
 import pkg from "pg"; 
 
