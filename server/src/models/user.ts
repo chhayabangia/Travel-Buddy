@@ -1,5 +1,6 @@
-import { DataTypes, Optional, Model } from "sequelize";
-import sequelize from "../config/db.js";
+import { DataTypes, Optional, Model, Sequelize } from "sequelize";
+import bcrypt from "bcrypt";
+
 
 interface UserAttributes {
   id: number;
@@ -10,13 +11,19 @@ interface UserAttributes {
 
 interface UserCreationAttributes extends Optional<UserAttributes, "id"> {}
 
-class User extends Model<UserAttributes, UserCreationAttributes> implements UserAttributes {
+export class User extends Model<UserAttributes, UserCreationAttributes> implements UserAttributes {
   public id!: number;
   public username!: string;
   public email!: string;
   public password!: string;
-}
 
+  public async setPassword(password: string) {
+    const saltRounds = 10;
+    this.password = await bcrypt.hash(password, saltRounds);
+    }
+  }
+
+export function UserFactory(sequelize: Sequelize): typeof User { 
 User.init(
   {
     id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
@@ -24,7 +31,21 @@ User.init(
     email: { type: DataTypes.STRING, allowNull: false, unique: true },
     password: { type: DataTypes.STRING, allowNull: false },
   },
-  { sequelize, tableName: "users" }
+  { 
+    tableName: "users",
+    sequelize,
+    hooks: {
+      beforeCreate: async (user: User) => {
+        await user.setPassword(user.password);
+      },
+      beforeUpdate: async (user: User) => {
+        if (user.changed('password')) {
+        await user.setPassword(user.password);
+      }
+      },
+    }
+  }
 );
 
-export default User;
+return User;
+}

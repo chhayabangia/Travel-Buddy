@@ -1,15 +1,14 @@
 import sequelize from "../config/db.js"; 
-import User from "./user.js"; 
-import Itinerary from "./itinerary.js"; 
-//import Weather from "./Weather.js"; 
-
+import { UserFactory } from "./user.js"; 
+import { Itinerary } from "./itinerary.js"; 
+import { Weather } from "./Weather.js"; 
+const User = UserFactory(sequelize);
 //Define relationships between models
 User.hasMany(Itinerary, { foreignKey: "userId", onDelete: "CASCADE" });
 Itinerary.belongsTo(User, { foreignKey: "userId" });
 
-/*Itinerary.hasOne(Weather, { foreignKey: "city", onDelete: "CASCADE" });
+Itinerary.hasOne(Weather, { foreignKey: "city", onDelete: "CASCADE" });
 Weather.belongsTo(Itinerary, { foreignKey: "itineraryId" });
-export { sequelize, User, Itinerary, Weather };*/
 
 //Sync models with the database (optional, can also be done in `db.ts`)
 const syncDatabase = async () => {
@@ -24,4 +23,4 @@ const syncDatabase = async () => {
 //Execute database sync (optional)
 syncDatabase();
 
-export { sequelize, User, Itinerary };
+export { sequelize, User, Itinerary, Weather };
