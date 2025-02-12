@@ -1,4 +1,59 @@
+// Changing the db.ts to see if it fixes the db issue i was having with render, old code is below
+import { Sequelize } from 'sequelize';
 import dotenv from 'dotenv';
+
+dotenv.config();
+
+// ✅ Detect if running on Render (DATABASE_URL exists)
+const isUsingRenderDB = Boolean(process.env.DATABASE_URL);
+
+// ✅ Configure SSL only for Render
+const sequelize = isUsingRenderDB
+  ? new Sequelize(process.env.DATABASE_URL as string, {
+      dialect: 'postgres',
+      dialectOptions: {
+        ssl: {
+          require: true, 
+          rejectUnauthorized: false, 
+        },
+      },
+      logging: false,
+    })
+  : new Sequelize(
+      process.env.DB_NAME as string,
+      process.env.DB_USER as string,
+      process.env.DB_PASSWORD as string,
+      {
+        host: process.env.DB_HOST || 'localhost',
+        port: Number(process.env.DB_PORT) || 5432,
+        dialect: 'postgres',
+        logging: false,
+      }
+    );
+
+// ✅ Verify database connection
+async function checkConnection() {
+  try {
+    await sequelize.authenticate();
+    console.log(
+      isUsingRenderDB
+        ? '✅ Connected to Render PostgreSQL with SSL.'
+        : `✅ Connected to local PostgreSQL database: ${process.env.DB_NAME} at ${process.env.DB_HOST}`
+    );
+  } catch (error) {
+    console.error('❌ Unable to connect to the database:', error);
+    process.exit(1);
+  }
+}
+
+// ✅ Run connection check on startup
+checkConnection();
+
+export default sequelize;
+
+
+
+/* import dotenv from 'dotenv';
 dotenv.config();
 
 import { Sequelize } from 'sequelize';
@@ -41,7 +96,7 @@ async function checkConnection() {
 // Call the function to log connection details
 checkConnection();
 
-export default sequelize;
+export default sequelize; */
 
 
 /*// Used to connect to a local database

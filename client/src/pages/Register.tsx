@@ -3,6 +3,7 @@ import { ChangeEvent, FormEvent, useState } from "react";
 import { createUser } from "../api/userAPI";
 import type { UserData } from "../interfaces/UserData";
 import { useNavigate } from "react-router-dom";
+import "./../css/global.css";
 
 const RegisterForm = () => {
   const [newUser, setNewUser] = useState<UserData>({
@@ -45,21 +46,46 @@ const RegisterForm = () => {
 
   return (
     <div className="form-container">
-    <form className="form" onSubmit={handleFormSubmit}>
-      <input
-        type="text"
-        name="username"
-        value={newUser.username}
-        onChange={handleInputChange}
-      />
-      <input
-        type="password"
-        name="password"
-        value={newUser.password}
-        onChange={handleInputChange}
-      />
-      <button type="submit">Register</button>
-    </form>
+      <form className="form" onSubmit={handleFormSubmit}>
+        {/* Username Field */}
+        <div className="form-group">
+          <label htmlFor="username">Username:</label>
+          <input
+            type="text"
+            id="username"
+            name="username"
+            value={newUser.username}
+            onChange={handleInputChange}
+            placeholder="Enter your username"
+            title="Please enter your username"
+            aria-label="Username"
+            required
+          />
+        </div>
+
+        {/* Password Field */}
+        <div className="form-group">
+          <label htmlFor="password">Password:</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            value={newUser.password}
+            onChange={handleInputChange}
+            placeholder="Enter your password"
+            title="Please enter your password"
+            aria-label="Password"
+            required
+          />
+        </div>
+
+        {/* Login Button */}
+        <button type="submit" title="Click to register">
+          📝 Register
+        </button>
+      </form>
     </div>
   );
 };
+
+export default RegisterForm;

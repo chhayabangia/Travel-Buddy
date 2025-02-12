@@ -1,4 +1,6 @@
+// RapidAPI verison of flight search
 import React, { useState } from 'react';
+import "../css/FlightSearch.css";
 
 interface Flight {
   flightNumber: string;
@@ -28,6 +30,7 @@ const FlightSelection: React.FC<FlightSelectionProps> = ({ origin, destination, 
       const response = await fetch(
         `http://localhost:5000/api/flights?origin=${origin}&destination=${destination}&departureDate=${departureDate}`
       );
+
       const data = await response.json();
       if (response.ok) {
         setFlights(data);
@@ -47,34 +50,35 @@ const FlightSelection: React.FC<FlightSelectionProps> = ({ origin, destination, 
   };
 
   return (
-    <div className="container mt-4">
-      <h2>Select Your Flight</h2>
-      <button className="btn btn-primary mb-3" onClick={fetchFlights} disabled={loading}>
-        {loading ? 'Loading...' : 'Search Flights'}
+    <div className="flight-search">
+      <h2>✈️ Select Your Flight</h2>
+      <button className="search-btn" onClick={fetchFlights} disabled={loading}>
+        {loading ? "Loading..." : "🔍 Search Flights"}
       </button>
-      {error && <p className="text-danger">{error}</p>}
-      {flights.length > 0 && (
-        <div>
-          <h3>Available Flights</h3>
-          <ul className="list-group">
-            {flights.map((flight, index) => (
-              <li key={index} className={`list-group-item d-flex justify-content-between align-items-center ${selectedFlight === flight ? 'active' : ''}`}>
-                <span>
-                  <strong>{flight.airline}</strong> - Flight {flight.flightNumber} - ${flight.price}
-                  <br />
-                  <small>Departure: {flight.departureTime} | Arrival: {flight.arrivalTime}</small>
-                </span>
-                <button className="btn btn-success" onClick={() => handleFlightSelection(flight)}>
-                  Select
-                </button>
-              </li>
-            ))}
-          </ul>
-        </div>
+      {error && <p className="error-message">{error}</p>}
+
+      {/* ✅ Fallback message if no flights are found */}
+      {!loading && flights.length === 0 && !error && (
+        <p className="no-results">No flights found. Try another search.</p>
       )}
+
+      {/* ✅ Display available flights */}
+      <ul className="flight-list">
+        {flights.map((flight, index) => (
+          <li key={index} className={`flight-item ${selectedFlight === flight ? "selected" : ""}`}>
+            <h3>{flight.airline} - Flight {flight.flightNumber}</h3>
+            <p>Departure: {flight.departureTime} | Arrival: {flight.arrivalTime}</p>
+            <p className="flight-price">💰 ${flight.price}</p>
+            <button className="select-flight-btn" onClick={() => handleFlightSelection(flight)}>
+              Select
+            </button>
+          </li>
+        ))}
+      </ul>
+
       {selectedFlight && (
-        <div className="mt-3">
-          <h4>Selected Flight:</h4>
+        <div className="selected-flight">
+          <h4>✅ Selected Flight:</h4>
           <p><strong>Airline:</strong> {selectedFlight.airline}</p>
           <p><strong>Flight Number:</strong> {selectedFlight.flightNumber}</p>
           <p><strong>Price:</strong> ${selectedFlight.price}</p>
