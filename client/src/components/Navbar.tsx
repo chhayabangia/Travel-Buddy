@@ -11,6 +11,7 @@ function Navbar() {
         <Link to="/flights">✈️ Flights</Link>
         <Link to="/hotels">🏨 Hotels</Link>
         <Link to="/login">🔑 Login</Link>
+        <Link to="/register">📝 Register</Link>
       </div>
     </nav>
   );

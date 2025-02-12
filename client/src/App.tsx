@@ -5,6 +5,7 @@ import FlightSearch from "./components/FlightSearch.tsx";
 import HotelSearch from "./components/HotelSearch.tsx";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
+import RegisterForm from "./pages/Register";
 import "./css/global.css";
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<RegisterForm />} />
             <Route
               path="/flights"
               element={
