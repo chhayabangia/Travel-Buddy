@@ -1,0 +1,182 @@
+/* General Styles */
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f1f3f6;
+    color: #333;
+    line-height: 1.6;
+}
+
+a {
+    text-decoration: none;
+    color: #007BFF;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Header Styles */
+header {
+    background: linear-gradient(90deg, #007BFF, #00c6ff);
+    color: white;
+    padding: 30px 0;
+    text-align: center;
+}
+
+header .logo h1 {
+    font-size: 2.5rem;
+    margin: 0;
+}
+
+header nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0 0;
+}
+
+header nav ul li {
+    display: inline;
+    margin: 0 20px;
+}
+
+header nav ul li a {
+    font-weight: 500;
+    font-size: 1.1rem;
+}
+
+header nav ul li a:hover {
+    text-decoration: underline;
+}
+
+/* Container Styles */
+.container {
+    width: 80%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Trip Planning Section */
+#trip-planner {
+    background-color: #fff;
+    padding: 60px 0;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    margin-top: 40px;
+    border-radius: 10px;
+}
+
+#trip-planner h2 {
+    color: #007BFF;
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+#trip-planner p {
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+    color: #555;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+input[type="text"], input[type="date"] {
+    padding: 12px;
+    font-size: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-top: 8px;
+    width: 100%;
+    background-color: #f9f9f9;
+}
+
+button.btn {
+    padding: 14px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+button.btn:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+/* Section Styles */
+.section {
+    padding: 60px 0;
+    background-color: #fff;
+    margin-top: 40px;
+}
+
+h2 {
+    color: #333;
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+}
+
+.card {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+/* Footer Styles */
+footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 25px 0;
+}
+
+footer .container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    header .logo h1 {
+        font-size: 1.8rem;
+    }
+
+    header nav ul li {
+        display: block;
+        margin: 15px 0;
+    }
+
+    .container {
+        width: 90%;
+    }
+
+    #trip-planner h2 {
+        font-size: 1.6rem;
+    }
+
+    form {
+        gap: 15px;
+    }
+
+    button.btn {
+        padding: 12px;
+    }
+
+    #itinerary-details, #weather-info {
+        padding: 15px;
+    }
+}

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>travelbuddy-team01</title>
+    
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.0/css/bulma.min.css" rel="stylesheet" />
+        <link rel="stylesheet" href="style.css">
+        <script src="https://kit.fontawesome.com/4fed1b79f0.js" crossorigin="anonymous"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    
+    </head>
+<body>
+    <!-- Header Section -->
+    <header>
+        
+        <div class="logo">
+                <img src="https://files.slack.com/files-pri/T07MR0C8BMG-F08CW0KQC3C/picture1.png" alt="logo">
+            <h1>Travel Buddy</h1>
+
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#trip-planner">Plan a Trip</a></li>
+                <li><a href="#itinerary">My Itinerary</a></li>
+                <li><a href="#weather">Weather</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Trip Planning Section -->
+        <section id="trip-planner">
+            <div class="container">
+                <h2>Start Your Adventure with Travel Buddy</h2>
+                <p>Planning your next trip has never been easier. Just fill in your details, and let us handle the rest!</p>
+
+                <form id="trip-form">
+                    <div class="form-group">
+                        <label for="destination">Destination:</label>
+                        <input type="text" id="destination" name="destination" placeholder="Enter your destination" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="start-date">Start Date:</label>
+                        <input type="date" id="start-date" name="start-date" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="end-date">End Date:</label>
+                        <input type="date" id="end-date" name="end-date" required>
+                    </div>
+
+                    <button type="submit" class="btn">Create My Itinerary</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- Itinerary Section -->
+        <section id="itinerary" class="section">
+            <div class="container">
+                <h2>Your Detailed Itinerary</h2>
+                <div id="itinerary-details" class="card">
+                    <!-- Itinerary content will be dynamically displayed here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Weather Section -->
+        <section id="weather" class="section">
+            <div class="container">
+                <h2>Weather Forecast</h2>
+                <div id="weather-info" class="card">
+                    <!-- Weather content will be dynamically displayed here -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Travel Buddy | All Rights Reserved</p>
+        </div>
+    </footer>
+    
+   
+    
+  
