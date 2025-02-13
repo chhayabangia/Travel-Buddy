@@ -17,21 +17,44 @@ Travel Buddy is an interactive full-stack application designed to help travelers
   - View hotel names, ratings, and locations.
   - Supports **future enhancements** like price comparisons.
 
-- **🌦️ Weather Forecast**
+- **🌦️ Weather Forecast** (Coming Soon)
   - Get **real-time weather updates** for your trip.
   - Displays **temperature, conditions, and forecast**.
 
-- **💰 Expense Tracking**
+- **💰 Expense Tracking** (Coming Soon)
   - Add travel expenses manually.
   - View **total cost breakdown** for your itinerary.
 
-- **📍 Itinerary Management**
+- **📍 Itinerary Management** (Coming Soon)
   - Create and customize **day-by-day itineraries**.
   - Organize **flights, hotels, and activities** in one place.
 
-- **🔐 User Authentication**
+- **🔐 User Authentication** 
   - Secure **JWT-based authentication** for login & signup.
   - User-specific **profile and travel data**. 
+
+---
+
+## 🌍 Live Deployment
+
+### **Frontend Deployment URL:**
+🔗 [Travel Buddy Live](https://travel-buddy-1-9ije.onrender.com)
+
+### **Backend API Deployment URL:**
+🔗 [Travel Buddy API](https://travel-buddy-api-24xq.onrender.com)
+
+---
+
+## 🖼️ Screenshots
+
+### **Homepage:**
+![Homepage Screenshot](screenshots/homepage.png)
+
+### **Flight Search:**
+![Flight Search Screenshot](screenshots/flight-search.png)
+
+### **Hotel Search:**
+![Hotel Search Screenshot](screenshots/hotel-search.png)
 
 ---
 

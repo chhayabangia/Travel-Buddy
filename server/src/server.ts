@@ -12,11 +12,27 @@ dotenv.config();
 
 const app = express();
 
-// ✅ Allow frontend to access backend from Render (CORS Fix)
-app.use(cors({
-  origin: process.env.FRONTEND_URL || '*', 
-  credentials: true,
-}));
+// Ensure process.env.FRONTEND_URL is defined before adding it
+const allowedOrigins = new Set([
+  'http://localhost:3000', // ✅ Allow local frontend
+  process.env.FRONTEND_URL, // ✅ Allow deployed frontend
+]);
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.has(origin)) {
+        callback(null, true);
+      } else {
+        console.error(`❌ CORS blocked request from: ${origin}`);
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
+  })
+);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -34,12 +50,10 @@ app.get("/", (req, res) => {
 });
 
 // ✅ Ensure Render assigns a port dynamically
-const PORT = process.env.PORT;
+// ✅ Use 5000 for local development, otherwise use Render’s assigned port
+const PORT = process.env.PORT && process.env.PORT !== "5432" ? process.env.PORT : 5000;
 
-if (!PORT) {
-  console.error("❌ Render did NOT provide a PORT! Exiting...");
-  process.exit(1);
-}
+console.log(`🟡 Using PORT: ${PORT}`);
 
 console.log(`🟡 Render assigned PORT: ${PORT}`);
 console.log(`🟡 Forcing server to use PORT: ${PORT}`);

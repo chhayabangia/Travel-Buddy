@@ -1,5 +1,7 @@
 import { useState } from "react";
-import "../css/HotelSearch.css";
+import "../css/hotels.css";
+import "../css/forms.css";
+
 
 // Predefined city mappings
 const cityMappings: { [key: string]: string } = {

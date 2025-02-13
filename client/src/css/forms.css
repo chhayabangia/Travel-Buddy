@@ -1,0 +1,47 @@
+/* 📌 Global Form Styles */
+/* 🌙 Dark Mode for All Input Fields */
+input, select {
+    padding: 14px; 
+    font-size: 16px; 
+    border: 1px solid #444;
+    background-color: #222; /* Dark background */
+    color: #fff; /* White text */
+    border-radius: 5px;
+    width: 100%;
+    max-width: 500px;
+    outline: none;
+}
+
+/* ✨ Improve Focus Styling */
+input:focus, select:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+/* 📌 Ensure Dropdowns are Styled */
+select {
+    appearance: none; /* Removes default styles */
+    padding-right: 30px; /* Space for dropdown arrow */
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16"><path fill="white" d="M7 10l5 5 5-5z"/></svg>'); /* Custom dropdown arrow */
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 16px;
+}
+
+  
+/* 🔘 Search Button */
+.search-bar button {
+    padding: 14px 24px;
+    font-size: 16px;
+    cursor: pointer;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    transition: background 0.3s ease-in-out;
+}
+  
+.search-bar button:hover {
+    background: #0056b3;
+}
+  

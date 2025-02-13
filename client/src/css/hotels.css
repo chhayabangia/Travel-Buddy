@@ -1,0 +1,26 @@
+.hotel-search {
+    background: #1e1e1e;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
+    max-width: 1200px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  /* 🔍 Search Bar */
+  .search-bar {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    padding: 15px;
+    background: #2a2a2a;
+    border-radius: 8px;
+    width: 100%;
+    max-width: 1100px;
+  }
+  

@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from "react";
-import "../css/FlightSearch.css";
+import { useState } from "react";
+import { FaPlaneDeparture, FaPlaneArrival, FaCalendarAlt, FaUsers } from "react-icons/fa";
+import "../css/flights.css";
+import "../css/forms.css";
 
 const airportMappings: Record<string, string> = {
   "New York": "NYC",
@@ -24,25 +26,33 @@ const FlightSearch: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [sortBy, setSortBy] = useState("price");
-  const [airportSuggestions, setAirportSuggestions] = useState<string[]>([]);
 
   const handleSearch = async () => {
     setLoading(true);
     setError(null);
 
     console.log("🔎 User Input:", destination);
+    const mappedDeparture = airportMappings[departure] || departure;
     const mappedDestination = airportMappings[destination] || destination;
-
-    if (!mappedDestination) {
+    
+    if (!mappedDeparture || !mappedDestination) {
       console.error("❌ No mapped airport code found!");
-      setError("Invalid city name. Please select a valid destination.");
+      setError("Invalid city name. Please select a valid departure and destination.");
       setLoading(false);
       return;
     }
-
+    
     console.log("✅ Final Mapped Airport Code:", mappedDestination);
-    const apiUrl = `https://travel-buddy-api-24xq.onrender.com/api/flights/search?origin=${departure}&destination=${mappedDestination}&date=${date}&sortBy=${sortBy}`;
-    console.log("🚀 Sending Flight API Request:", apiUrl);
+    const BASE_URL =
+      import.meta.env.VITE_API_BASE_URL?.trim() || "http://localhost:5000";
+    
+    const apiUrl = `${BASE_URL}/api/flights/search?origin=${mappedDeparture}&destination=${mappedDestination}&date=${date}&sortBy=${sortBy}`;
+      console.log("🚀 API Request:", {
+      origin: mappedDeparture,
+      destination: mappedDestination,
+      date,
+      sortBy,
+    });
 
     try {
       const response = await fetch(apiUrl);
@@ -60,74 +70,88 @@ const FlightSearch: React.FC = () => {
     }
   };
 
-  // Sorting flights based on user selection
   const sortedFlights = [...flights].sort((a, b) => {
     if (sortBy === "price") return a.price - b.price;
     if (sortBy === "departure") return new Date(a.departureTime).getTime() - new Date(b.departureTime).getTime();
     if (sortBy === "arrival") return new Date(a.arrivalTime).getTime() - new Date(b.arrivalTime).getTime(); 
     if (sortBy === "airline") return a.airline.localeCompare(b.airline);
     return 0;
-  });
-
-  // Autocomplete airport suggestions
-  useEffect(() => {
-    const suggestions = Object.keys(airportMappings).filter((airport) =>
-      airport.toLowerCase().includes(departure.toLowerCase())
-    );
-    setAirportSuggestions(suggestions);
-  }, [departure]);
+  });  
 
   return (
     <div className="flight-search-container">
       <h2>Search Flights</h2>
-      <label>
-        Departure City:
-        <input
-          type="text"
-          placeholder="Enter departure city"
-          value={departure}
-          onChange={(e) => setDeparture(e.target.value)}
-        />
-        {airportSuggestions.length > 0 && (
-          <ul className="suggestions">
-            {airportSuggestions.map((suggestion, index) => (
-              <li key={index} onClick={() => setDeparture(suggestion)}>
-                {suggestion}
-              </li>
-            ))}
-          </ul>
-        )}
-      </label>
-      <label>
-        Destination:
-        <input
-          type="text"
-          placeholder="Enter destination"
-          value={destination}
-          onChange={(e) => setDestination(e.target.value)}
-        />
-      </label>
-      <label>
-        Date:
-        <input
-          type="date"
-          value={date}
-          onChange={(e) => setDate(e.target.value)}
-        />
-      </label>
-      <button onClick={handleSearch} disabled={loading}>
+
+      {/* 🔹 Flight Search Bar */}
+      <div className="flight-search-bar">
+        
+        {/* 🌍 Departure Input */}
+        <div className="input-group">
+          <label htmlFor="departure" className="visually-hidden">Departure</label>
+          <FaPlaneDeparture className="input-icon" />
+          <input
+            id="departure"
+            type="text"
+            placeholder="From where?"
+            title="Enter departure city"
+            value={departure}
+            onChange={(e) => setDeparture(e.target.value)}
+          />
+        </div>
+
+        {/* 🏙 Destination Input */}
+        <div className="input-group">
+          <label htmlFor="destination" className="visually-hidden">Destination</label>
+          <FaPlaneArrival className="input-icon" />
+          <input
+            id="destination"
+            type="text"
+            placeholder="To where?"
+            title="Enter destination city"
+            value={destination}
+            onChange={(e) => setDestination(e.target.value)}
+          />
+        </div>
+
+        {/* 📅 Date Picker */}
+        <div className="input-group">
+          <label htmlFor="date" className="visually-hidden">Travel Date</label>
+          <FaCalendarAlt className="input-icon" />
+          <input
+            id="date"
+            type="date"
+            title="Select travel date"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+          />
+        </div>
+
+        {/* 👤 Travelers */}
+        <div className="input-group">
+          <label htmlFor="travelers" className="visually-hidden">Travelers</label>
+          <FaUsers className="input-icon" />
+          <select id="travelers" title="Select number of travelers" value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+            <option value="1 traveler">1 traveler</option>
+            <option value="2 travelers">2 travelers</option>
+            <option value="3 travelers">3 travelers</option>
+            <option value="4+ travelers">4+ travelers</option>
+          </select>
+        </div>
+
+      </div>
+
+      {/* 🔘 Search Button */}
+      <button className="search-button" onClick={handleSearch} disabled={loading}>
         {loading ? "Searching..." : "Search"}
       </button>
 
-      {error && <p className="error-message">{error}</p>}
-
+      {/* 🔹 Sorting Dropdown */}
       <label htmlFor="sortFlights">Sort by:</label>
       <select
         id="sortFlights"
-        onChange={(e) => {
-          setSortBy(e.target.value);
-          console.log("🔄 User changed sort filter:", e.target.value);
-        }}
+        title="Sort flights by"
+        value={sortBy}
+        onChange={(e) => setSortBy(e.target.value)}
       >
         <option value="price">Price (Lowest First)</option>
         <option value="airline">Airline (A-Z)</option>
@@ -135,17 +159,32 @@ const FlightSearch: React.FC = () => {
         <option value="arrival">Arrival Time (Earliest First)</option>
       </select>
 
-      <ul>
-        {sortedFlights.map((flight, index) => (
-          <li key={index}>
-            <strong>{flight.airline} {flight.flightNumber}</strong>
-            {index === 0 && <span className="cheapest">🔥 Cheapest</span>}
-            <p>Price: ${flight.price}</p>
-            <p>Departure: {new Date(flight.departureTime).toLocaleString()}</p>
-            <p>Arrival: {new Date(flight.arrivalTime).toLocaleString()}</p>
-          </li>
-        ))}
-      </ul>
+      {/* ❌ Show Error Message if Needed */}
+      {error && <p className="error-message">{error}</p>}
+
+      {/* 📌 Flight Search Results */}
+      {sortedFlights.length > 0 && (
+        <ul className="flight-list">
+          {sortedFlights.map((flight, index) => (
+            <li key={index} className="flight-item">
+              <strong>{flight.airline} {flight.flightNumber}</strong>
+              <p>Price: ${flight.price}</p>
+              <p>Departure: {new Date(flight.departureTime).toLocaleString()}</p>
+              <p>Arrival: {new Date(flight.arrivalTime).toLocaleString()}</p>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      {/* 📌 Additional Options */}
+      <div className="flight-options">
+        <label>
+          <input type="checkbox" /> Add a hotel
+        </label>
+        <label>
+          <input type="checkbox" /> Add a car
+        </label>
+      </div>
     </div>
   );
 };
