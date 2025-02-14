@@ -26,11 +26,12 @@ const FlightSearch: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [sortBy, setSortBy] = useState("price");
+  const [travelers, setTravelers] = useState("1 traveler");
 
   const handleSearch = async () => {
     setLoading(true);
     setError(null);
-
+  
     console.log("🔎 User Input:", destination);
     const mappedDeparture = airportMappings[departure] || departure;
     const mappedDestination = airportMappings[destination] || destination;
@@ -41,19 +42,16 @@ const FlightSearch: React.FC = () => {
       setLoading(false);
       return;
     }
-    
+  
     console.log("✅ Final Mapped Airport Code:", mappedDestination);
     const BASE_URL =
       import.meta.env.VITE_API_BASE_URL?.trim() || "http://localhost:5000";
     
-    const apiUrl = `${BASE_URL}/api/flights/search?origin=${mappedDeparture}&destination=${mappedDestination}&date=${date}&sortBy=${sortBy}`;
-      console.log("🚀 API Request:", {
-      origin: mappedDeparture,
-      destination: mappedDestination,
-      date,
-      sortBy,
-    });
-
+    const formattedSortBy = sortBy.split(":")[0];  // ✅ Ensures no unexpected ":1" format
+    const apiUrl = `${BASE_URL}/api/flights/search?origin=${mappedDeparture}&destination=${mappedDestination}&date=${date}&sortBy=${formattedSortBy}`;
+  
+    console.log("🚀 API Request:", { origin: mappedDeparture, destination: mappedDestination, date, sortBy });
+  
     try {
       const response = await fetch(apiUrl);
       if (!response.ok) {
@@ -61,14 +59,17 @@ const FlightSearch: React.FC = () => {
       }
       const data: Flight[] = await response.json();
       console.log("✅ Flight API Response:", data.length, "results");
-      setFlights(data);
+  
+      // ✅ Append new results instead of replacing them
+      setFlights((prevFlights) => [...prevFlights, ...data]);
+  
     } catch (err) {
       console.error("❌ Error fetching flights:", err);
       setError("Failed to fetch flight data. Please try again.");
     } finally {
       setLoading(false);
     }
-  };
+  };  
 
   const sortedFlights = [...flights].sort((a, b) => {
     if (sortBy === "price") return a.price - b.price;
@@ -80,7 +81,7 @@ const FlightSearch: React.FC = () => {
 
   return (
     <div className="flight-search-container">
-      <h2>Search Flights</h2>
+      <h2>✈️ Search Flights</h2>
 
       {/* 🔹 Flight Search Bar */}
       <div className="flight-search-bar">
@@ -130,14 +131,26 @@ const FlightSearch: React.FC = () => {
         <div className="input-group">
           <label htmlFor="travelers" className="visually-hidden">Travelers</label>
           <FaUsers className="input-icon" />
-          <select id="travelers" title="Select number of travelers" value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
-            <option value="1 traveler">1 traveler</option>
-            <option value="2 travelers">2 travelers</option>
-            <option value="3 travelers">3 travelers</option>
-            <option value="4+ travelers">4+ travelers</option>
+          <select
+            id="travelers"
+            title="Select number of travelers"
+            value={travelers}  // ✅ Use travelers state
+            onChange={(e) => setTravelers(e.target.value)}>
+              <option value="1 traveler">1 traveler</option>
+              <option value="2 travelers">2 travelers</option>
+              <option value="3 travelers">3 travelers</option>
+              <option value="4+ travelers">4+ travelers</option>
           </select>
         </div>
-
+        {/* 📌 Additional Options */}
+        <div className="flight-options">
+          <label>
+            <input type="checkbox" /> Add a hotel
+          </label>
+          <label>
+            <input type="checkbox" /> Add a car
+          </label>
+        </div>
       </div>
 
       {/* 🔘 Search Button */}
@@ -145,18 +158,19 @@ const FlightSearch: React.FC = () => {
         {loading ? "Searching..." : "Search"}
       </button>
 
+
+
       {/* 🔹 Sorting Dropdown */}
       <label htmlFor="sortFlights">Sort by:</label>
       <select
         id="sortFlights"
         title="Sort flights by"
         value={sortBy}
-        onChange={(e) => setSortBy(e.target.value)}
-      >
-        <option value="price">Price (Lowest First)</option>
-        <option value="airline">Airline (A-Z)</option>
-        <option value="departure">Departure Time (Earliest First)</option>
-        <option value="arrival">Arrival Time (Earliest First)</option>
+        onChange={(e) => setSortBy(e.target.value)}>
+          <option value="price">Price (Lowest First)</option>
+          <option value="airline">Airline (A-Z)</option>
+          <option value="departure">Departure Time (Earliest First)</option>
+          <option value="arrival">Arrival Time (Earliest First)</option>
       </select>
 
       {/* ❌ Show Error Message if Needed */}
@@ -175,16 +189,6 @@ const FlightSearch: React.FC = () => {
           ))}
         </ul>
       )}
-
-      {/* 📌 Additional Options */}
-      <div className="flight-options">
-        <label>
-          <input type="checkbox" /> Add a hotel
-        </label>
-        <label>
-          <input type="checkbox" /> Add a car
-        </label>
-      </div>
     </div>
   );
 };

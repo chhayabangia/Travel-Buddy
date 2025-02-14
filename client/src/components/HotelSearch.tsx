@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { FaUsers } from "react-icons/fa";
 import "../css/hotels.css";
 import "../css/forms.css";
 
@@ -38,16 +39,16 @@ const HotelSearch = () => {
     console.log("🔎 User Input:", input);
     console.log("🔎 Lowercase Input:", lowerCaseInput);
 
-    if (cityMappings.hasOwnProperty(lowerCaseInput)) {
-      console.log("✅ City Found in Mappings:", cityMappings[lowerCaseInput]);
-      setCity(cityMappings[lowerCaseInput]);
-      setFilteredCities([]);
-    } else {
-      console.log("❌ City Not Found! Showing suggestions...");
-      setFilteredCities(
-        cityOptions.filter((c) => c.toLowerCase().startsWith(lowerCaseInput))
-      );
-    }    
+    if (lowerCaseInput === "") {
+      setFilteredCities([]); // ✅ Hide dropdown when input is cleared
+      } else if (cityMappings.hasOwnProperty(lowerCaseInput)) {
+          setCity(cityMappings[lowerCaseInput]);
+          setFilteredCities([]); // ✅ Hide suggestions when a valid city is selected
+      } else {
+          setFilteredCities(
+              cityOptions.filter((c) => c.toLowerCase().startsWith(lowerCaseInput))
+          );
+      }
   };
 
   const handleCitySelect = (selectedCity: string) => {
@@ -78,11 +79,16 @@ const HotelSearch = () => {
     }
     
     console.log(`✅ Final City Code for API Request: ${cityCode}`);    
-    console.log(`🚀 Sending Hotel API Request: https://travel-buddy-api-24xq.onrender.com/api/hotels/search?cityCode=${cityCode}`);
-
+    const BASE_URL =
+    import.meta.env.VITE_API_BASE_URL?.trim() || "http://localhost:5000";
+  
+    const apiUrl = `${BASE_URL}/api/hotels/search?cityCode=${cityCode}`;
+    
+    console.log(`🚀 Sending Hotel API Request: ${apiUrl}`);
+    
     try {
-      const response = await fetch(`https://travel-buddy-api-24xq.onrender.com/api/hotels/search?cityCode=${cityCode}`);
-
+      const response = await fetch(apiUrl);
+    
       if (!response.ok) {
         throw new Error(`API request failed with status ${response.status}`);
       }
@@ -111,47 +117,51 @@ const HotelSearch = () => {
       <h2>🏨 Find Your Stay</h2>
       <div className="search-bar">
         <div className="autocomplete">
-          <label htmlFor="destination">Destination:</label>
+        <label htmlFor="destination" className="visually-hidden">Destination</label>
           <input
-            id="destination"
-            type="text"
-            placeholder="Enter city (e.g., New York)"
-            aria-label="Destination City"
-            title="Enter the name of the city"
-            value={city}
-            onChange={handleCityChange}
+              id="destination"
+              type="text"
+              placeholder="Enter city"
+              title="Enter city for hotels"
+              value={city}
+              onChange={handleCityChange}
           />
-          {filteredCities.length > 0 && (
-            <ul className="autocomplete-list">
-              {filteredCities.map((c, index) => (
-                <li key={index} onClick={() => handleCitySelect(c)}>
-                  {c}
-                </li>
-              ))}
-            </ul>
-          )}
+          {filteredCities.length > 0 && city.length > 1 && (
+              <ul className="autocomplete-list">
+                  {filteredCities.map((c, index) => (
+                      <li key={index} onClick={() => handleCitySelect(c)}>
+                          {c}
+                      </li>
+                  ))}
+              </ul>
+            )}
         </div>
 
-        <label htmlFor="check-in">Check-in:</label>
-        <input type="date" id="check-in" value={checkIn} onChange={(e) => setCheckIn(e.target.value)} />
+        <div className="input-group">
+          <label htmlFor="check-in" className="visually-hidden">Check-in</label>
+          <input type="date" id="check-in" value={checkIn} onChange={(e) => setCheckIn(e.target.value)} />
+        </div>
 
-        <label htmlFor="check-out">Check-out:</label>
-        <input type="date" id="check-out" value={checkOut} onChange={(e) => setCheckOut(e.target.value)} />
+        <div className="input-group">
+          <label htmlFor="check-out" className="visually-hidden">Check-out</label>
+          <input type="date" id="check-out" value={checkOut} onChange={(e) => setCheckOut(e.target.value)} />
+        </div>
 
-        <label htmlFor="guests">Guests:</label>
-        <select
-          id="guests"
-          value={guests}
-          onChange={(e) => setGuests(Number(e.target.value))}
-          aria-label="Number of guests"
-          title="Select number of guests"
-        >
-          {[...Array(10).keys()].map((num) => (
-            <option key={num + 1} value={num + 1}>
-              {num + 1} Guest{num > 0 ? "s" : ""}
-            </option>
-          ))}
-        </select>
+        <div className="input-group">
+          <FaUsers className="input-icon" />
+          <label htmlFor="guests" className="visually-hidden">Guests</label>
+          <select
+            id="guests"
+            title="Select number of guests"
+            value={guests}
+            onChange={(e) => setGuests(Number(e.target.value))}
+          >
+            <option value="1">1 Guest</option>
+            <option value="2">2 Guests</option>
+            <option value="3">3 Guests</option>
+            <option value="4">4+ Guests</option>
+          </select>
+        </div>
 
         <button onClick={searchHotels} disabled={loading} aria-label="Search Hotels" title="Click to search for hotels">
           {loading ? "Searching..." : "🔍 Search"}
@@ -166,14 +176,36 @@ const HotelSearch = () => {
 
       {hotels.length > 0 ? (
         <ul className="hotel-list">
-          {hotels.map((hotel, index) => (
-            <li key={index} className="hotel-item">
-              <h3>{hotel.name || "No Name Available"}</h3>
-              <p><strong>Location:</strong> {hotel.address?.countryCode || "Unknown"}</p>
-              <p><strong>Price:</strong> {hotel.price ? `$${hotel.price}` : "Not Available"}</p>
-              <p><strong>Last Update:</strong> {new Date(hotel.lastUpdate).toLocaleString()}</p>
-            </li>
-          ))}
+          {hotels.map((hotel, index) => {
+            const { name, address, geoCode, lastUpdate, price } = hotel;
+
+            return (
+              <li key={index} className="hotel-item">
+                <h3>{name || "No Name Available"}</h3>
+                
+                {/* 🌍 Display Full Address or Geo Coordinates */}
+                <p>
+                  <strong>Location:</strong> 
+                  {address?.countryCode 
+                    ? `${address?.countryCode}${address?.cityName ? `, ${address.cityName}` : ""}`
+                    : `Lat: ${geoCode?.latitude}, Lng: ${geoCode?.longitude}`
+                  }
+                </p>
+
+                {/* 💰 Display Price if Available */}
+                {price ? (
+                  <p><strong>Price:</strong> ${price}</p>
+                ) : (
+                  <p><strong>Price:</strong> Not Available</p>
+                )}
+
+                {/* 🕒 Improve Last Update Formatting */}
+                {lastUpdate && (
+                  <p><strong>Updated:</strong> {new Date(lastUpdate).toLocaleDateString()} at {new Date(lastUpdate).toLocaleTimeString()}</p>
+                )}
+              </li>
+            );
+          })}
         </ul>
       ) : (
         <p>No hotels found for this search.</p>

@@ -60,6 +60,7 @@ const RegisterForm = () => {
             title="Please enter your username"
             aria-label="Username"
             required
+            autoComplete="username"
           />
         </div>
 
@@ -76,6 +77,7 @@ const RegisterForm = () => {
             title="Please enter your password"
             aria-label="Password"
             required
+            autoComplete="new-password"
           />
         </div>
 

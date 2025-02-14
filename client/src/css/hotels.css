@@ -1,26 +1,148 @@
+/* 🏨 Hotel Search Container - Match Flight Search */
 .hotel-search {
-    background: #1e1e1e;
-    padding: 20px;
-    border-radius: 8px;
-    text-align: center;
-    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
-    max-width: 1200px;
-    margin: auto;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  /* 🔍 Search Bar */
+  background: #1e1e1e;
+  padding: 15px;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
+  max-width: 1100px;
+  margin-top: -50px; /* ✅ Aligns with flights search */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* 🔍 Hotel Search Bar - Match Flight Search */
+.search-bar {
+  display: flex;
+  flex-direction: column;  
+  align-items: center;
+  gap: 10px;
+  background: #2a2a2a;
+  padding: 15px;
+  border-radius: 10px;
+  width: 1100px;
+  max-width: 1200px; 
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+/* 📌 Input Fields */
+.search-bar .input-group {
+  position: relative;
+  width: 100%;
+  max-width: 400px; 
+  text-align: center;
+}
+
+.search-bar input,
+.search-bar select {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  border: 1px solid #555;
+  border-radius: 8px;
+  background-color: #222 !important;
+  color: #fff !important;
+  outline: none;
+  appearance: none;
+}
+
+/* 🔽 Improve Dropdown Visibility */
+.search-bar select {
+  padding-right: 30px; /* ✅ Makes room for dropdown arrow */
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16"><path fill="white" d="M7 10l5 5 5-5z"/></svg>'); 
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 16px;
+}
+
+/* 📌 Adjust Label Spacing */
+.input-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 14px;
+  color: #ddd;
+}
+
+.input-group .input-icon {
+  position: relative; /* ✅ Keeps the icon in line with the input */
+  left: 0px; /* ✅ Ensures it's next to the input */
+  top: auto;
+  transform: none;
+  color: #ddd; /* ✅ Match flights styling */
+  font-size: 18px;
+}
+
+.autocomplete-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* 🔘 Search Button */
+.search-bar button {
+  padding: 14px 24px;
+  font-size: 16px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease-in-out;
+}
+
+.search-bar button:hover {
+  background: #0056b3;
+}
+
+/* 🏨 Hotel Results - Add Scroll */
+.hotel-list {
+  list-style: none;
+  padding: 0;
+  margin-top: 10px;
+  width: 100%;
+  max-width: 750px;
+  max-height: 350px; /* ✅ Adds a scrollbar */
+  overflow-y: auto;
+  border: 1px solid #555;
+  padding: 10px;
+  background: #222;
+  border-radius: 8px;
+}
+
+/* 🏨 Individual Hotel Item */
+.hotel-item {
+  background: #333;
+  color: #fff;
+  border: 1px solid #555;
+  border-radius: 6px;
+  padding: 15px;
+  margin-bottom: 10px;
+  box-shadow: 0px 4px 8px rgba(255, 255, 255, 0.1);
+  text-align: left;
+  line-height: 1.6;
+}
+
+/* 📍 Ensure Address is Well Spaced */
+.hotel-item p {
+  margin: 5px 0;
+}
+
+@media (max-width: 768px) {
   .search-bar {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 10px;
-    padding: 15px;
-    background: #2a2a2a;
-    border-radius: 8px;
-    width: 100%;
-    max-width: 1100px;
+      flex-direction: column; 
+      align-items: center;
+      margin-bottom: 10px;
   }
-  
+
+  .search-bar input,
+  .search-bar select {
+      width: 100%;
+  }
+
+  .hotel-list {
+      max-width: 90%;
+      max-height: 250px; /* ✅ Keep results compact */
+  }
+}
