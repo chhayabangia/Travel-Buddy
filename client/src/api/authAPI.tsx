@@ -1,6 +1,6 @@
 import type { UserLogin } from "../interfaces/UserLogin";
 
-const DB_URL = import.meta.env.VITE_DB_URL || "http://localhost:5000";
+const DB_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
 
 const login = async (userInfo: UserLogin): Promise<any> => {
   try {

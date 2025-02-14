@@ -1,5 +1,6 @@
 import Auth from "../utils/auth";
 import type { UserData } from "../interfaces/UserData";
+
 const DB_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
 
 const retrieveUsers = async (): Promise<UserData[]> => {
