@@ -1,5 +1,5 @@
 import { Sequelize, DataTypes, Optional, Model } from "sequelize";
-import { User } from "./user";
+import { User } from "./user-models";
 
 interface weatherData {
   temperature: number;

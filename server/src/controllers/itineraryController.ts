@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { Itinerary } from "../models/itinerary.js";
+import { Itinerary } from "../models/itinerary-models.js";
 import { getWeatherByCity, getCoordinates } from "../services/weatherServices.js";
 import { searchFlights } from "../services/flightService.js";
 

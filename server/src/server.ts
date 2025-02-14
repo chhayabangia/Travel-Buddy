@@ -1,9 +1,9 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
+import authRoutes from "./routes/auth-routes.js"; 
 import sequelize from './config/db.js';
 import itineraryRoutes from './routes/itinerary.js';
-import authRoutes from './routes/auth.js';
 import flightRoutes from "./routes/flights-amadeus.js";
 import hotelRoutes from './routes/hotels-amadeus.js';
 import cityRoutes from "./routes/cities.js";
@@ -37,17 +37,26 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// ✅ Define API Routes
+// ✅ Register API Routes First
+console.log("Registering authentication routes...");
+
+app.use("/api/auth", authRoutes); 
+
+console.log("Authentication routes loaded!");
+
 app.use('/api/itinerary', itineraryRoutes);
-app.use('/api/auth', authRoutes);
 app.use('/api/hotels', hotelRoutes);
 app.use("/api/cities", cityRoutes);
 app.use("/api/flights", flightRoutes);
 
-// ✅ Root Route for Debugging
-app.get("/", (req, res) => {
-  res.send("✅ Travel Buddy API is running!");
+// ✅ Move 404 Handler to the Bottom
+app.get("*", (req, res) => {
+  res.status(404).json({ error: "Not Found" });
 });
+app.get("/debug-auth", (req, res) => {
+  res.json({ message: "Auth routes are working!" });
+});
+
 
 // ✅ Ensure Render assigns a port dynamically
 // ✅ Use 5000 for local development, otherwise use Render’s assigned port
@@ -62,17 +71,24 @@ console.log(`🟡 Forcing server to use PORT: ${PORT}`);
 const startServer = async () => {
   try {
     await sequelize.authenticate();
-    console.log('✅ Database connected successfully.');
+    console.log("✅ Database connected successfully.");
 
-    await sequelize.sync(); 
-    console.log('✅ Database models synchronized.');
+    console.log("🛠 Checking if User model exists:", sequelize.models.User ? "✅ Exists" : "❌ Not Found");
+    console.log("🛠 Current Registered Models:", Object.keys(sequelize.models));
+    
+    console.log("🛠 Checking Registered Models Before Sync:", sequelize.models);
+
+    await sequelize.sync({ alter: true });
+    console.log("✅ Database models synchronized.");
+
+    console.log("🛠 Checking Registered Models After Sync:", sequelize.models);
 
     app.listen(PORT, () => {
       console.log(`✅ Server running on assigned port: ${PORT}`);
     });
 
   } catch (error) {
-    console.error('❌ Server failed to start:', error);
+    console.error("❌ Server failed to start:", error);
     process.exit(1);
   }
 };

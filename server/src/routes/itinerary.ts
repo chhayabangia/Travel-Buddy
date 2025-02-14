@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import { authenticateJWT } from '../middleware/auth.js';
+import { authenticateJWT } from '../middleware/auth-middleware.js';
 import { createItinerary, getAllItineraries, updateItinerary, deleteItinerary } from '../controllers/itineraryController.js';
 
 const router = express.Router();

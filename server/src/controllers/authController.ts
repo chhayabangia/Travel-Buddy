@@ -2,10 +2,10 @@ import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
-import { User }from '../models/user.js';
+import { User } from "../models/user-models.js";
 
 dotenv.config();
-export const register = async (req: Request, res: Response) => {
+/* export const register = async (req: Request, res: Response) => {
   try {
     const { username, email, password } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -14,9 +14,9 @@ export const register = async (req: Request, res: Response) => {
   } catch (error) {
     res.status(500).json({ error: "Failed to register user" });
   }
-};
+}; */
 
-export const login = async (req: Request, res: Response): Promise<void> => {
+/* export const login = async (req: Request, res: Response): Promise<void> => {
   try {
     const { username, password } = req.body;
 
@@ -43,7 +43,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     console.error('Error logging in:', error);
     res.status(500).json({ error: 'Failed to log in' });
   }
-};
+}; */
 
 /* const existingUser = await User.findOne({ where: { email } });
 if (existingUser) {
@@ -51,3 +51,53 @@ if (existingUser) {
 }
 
 const hashedPassword = await bcrypt.hash(password, 10);*/
+
+export const register = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { username, email, password } = req.body;
+
+    if (!username || !email || !password) {
+      res.status(400).json({ error: "All fields are required" });
+      return;
+    }
+
+    const existingUser = await User.findOne({ where: { email } });
+
+    if (existingUser) {
+      res.status(400).json({ error: "Email already in use" });
+      return;
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const newUser = await User.create({ username, email, password: hashedPassword });
+
+    res.status(201).json({ message: "User created successfully", user: newUser });
+  } catch (error: any) {  
+    console.error("Registration error:", error.message); 
+    res.status(500).json({ error: "Failed to register user", details: error.message });
+  }
+};
+
+export const login = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { username, password } = req.body;
+    const user = await User.findOne({ where: { username } });
+
+    if (!user) {
+      res.status(400).json({ error: "Invalid credentials" });
+      return;
+    }
+
+    const validPassword = await bcrypt.compare(password, user.password);
+    if (!validPassword) {
+      res.status(400).json({ error: "Invalid credentials" });
+      return;
+    }
+
+    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET as string, { expiresIn: "1h" });
+
+    res.json({ token });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to log in" });
+  }
+};
